@@ -35,6 +35,7 @@ object ProjectProperties {
         const val APP = "com.mpersand.gkr_android"
         const val DATA = "com.mpersand.data"
         const val DOMAIN = "com.mpersand.domain"
+        const val PRESENTATION = "com.mpersand.presentation"
     }
 
     object Action {
