@@ -8,7 +8,7 @@ android {
     compileSdk = ProjectProperties.Versions.COMPILE_SDK
 
     defaultConfig {
-        applicationId = ProjectProperties.Id.APPLICATION_ID
+        applicationId = ProjectProperties.NameSpace.APP
         minSdk = ProjectProperties.Versions.MIN_SDK
         targetSdk = ProjectProperties.Versions.TARGET_SDK
         versionCode = ProjectProperties.Versions.VERSION_CODE
