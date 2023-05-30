@@ -9,7 +9,6 @@ android {
 
     defaultConfig {
         minSdk = ProjectProperties.Versions.MIN_SDK
-        targetSdk = ProjectProperties.Versions.TARGET_SDK
 
         testInstrumentationRunner = ProjectProperties.Test.TEST_RUNNER
         consumerProguardFiles(ProjectProperties.Files.CONSUMER_PROGUARD)
