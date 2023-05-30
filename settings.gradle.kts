@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "GKR-Android"
 include(":app")
 include(":data")
+include(":domain")
