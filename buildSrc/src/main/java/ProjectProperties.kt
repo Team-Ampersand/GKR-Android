@@ -35,6 +35,7 @@ object ProjectProperties {
         const val DOMAIN = "com.mpersand.domain"
         const val PRESENTATION = "com.mpersand.presentation"
         const val DI = "com.mpersand.di"
+        const val DESIGN_SYSTEM = "com.mpersand.design_system"
     }
 
     object Action {
