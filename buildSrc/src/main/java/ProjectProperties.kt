@@ -18,6 +18,7 @@ object ProjectProperties {
     object Files {
         const val DEFAULT_PROGUARD = "proguard-android-optimize.txt"
         const val PROGUARD = "proguard-rules.pro"
+        const val CONSUMER_PROGUARD = "consumer-rules.pro"
     }
 
     object Versions {
