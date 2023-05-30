@@ -15,4 +15,8 @@ object Versions {
 
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.10.0"
+
+    const val COMPOSE = "1.3.1"
+    const val ACTIVITY_COMPOSE = "1.3.1"
+    const val COMPOSE_MATERIAL = "1.2.0"
 }

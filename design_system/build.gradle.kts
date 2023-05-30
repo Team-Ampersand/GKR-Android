@@ -1,12 +1,10 @@
 plugins {
     id(ProjectProperties.Gradle.LIBRARY)
     id(ProjectProperties.Gradle.KOTLIN)
-    id(ProjectProperties.Gradle.HILT_PLUGIN)
-    kotlin(ProjectProperties.Gradle.KAPT)
 }
 
 android {
-    namespace = ProjectProperties.NameSpace.PRESENTATION
+    namespace = ProjectProperties.NameSpace.DESIGN_SYSTEM
     compileSdk = ProjectProperties.Versions.COMPILE_SDK
 
     defaultConfig {
@@ -38,17 +36,12 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain"))
-
     implementation(Dependency.AndroidX.CORE_KTX)
     implementation(Dependency.AndroidX.APPCOMPAT)
     implementation(Dependency.Google.MATERIAL)
     testImplementation(Dependency.Test.JUNIT)
     androidTestImplementation(Dependency.Test.ANDROID_JUNIT)
     androidTestImplementation(Dependency.Test.ESPRESSO)
-
-    implementation(Dependency.Google.HILT)
-    kapt(Dependency.Google.HILT_COMPILER)
 
     implementation(Dependency.Compose.ACTIVITY_COMPOSE)
     implementation(Dependency.Compose.COMPOSE)
