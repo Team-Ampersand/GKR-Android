@@ -32,6 +32,7 @@ object ProjectProperties {
 
     object NameSpace {
         const val APP = "com.mpersand.gkr_android"
+        const val DATA = "com.mpersand.data"
     }
 
     object Action {
