@@ -11,10 +11,6 @@ object ProjectProperties {
         const val TEST_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    object Id {
-        const val APPLICATION_ID = "com.mpersand.gkr_android"
-    }
-
     object Files {
         const val DEFAULT_PROGUARD = "proguard-android-optimize.txt"
         const val PROGUARD = "proguard-rules.pro"
