@@ -19,6 +19,14 @@ class Dependency {
             "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
     }
 
+    object Compose {
+        const val ACTIVITY_COMPOSE = "androidx.activity:activity-compose:${Versions.ACTIVITY_COMPOSE}"
+        const val COMPOSE = "androidx.compose.ui:ui:${Versions.COMPOSE}"
+        const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview:${Versions.COMPOSE}"
+        const val COMPOSE_MATERIAL = "androidx.compose.material:material:${Versions.COMPOSE_MATERIAL}"
+        const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling:${Versions.COMPOSE}"
+    }
+
     object Test {
         const val JUNIT = "junit:junit:${Versions.JUNIT}"
         const val ANDROID_JUNIT = "androidx.test.ext:junit:${Versions.ANDROID_JUNIT}"
