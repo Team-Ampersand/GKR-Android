@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "GKR-Android"
-include ':app'
+include(":app")
