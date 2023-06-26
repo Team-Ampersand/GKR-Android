@@ -65,4 +65,3 @@ fun getApiKey(propertyKey: String): String {
     properties.load(FileInputStream(propFile))
     return properties.getProperty(propertyKey)
 }
-
