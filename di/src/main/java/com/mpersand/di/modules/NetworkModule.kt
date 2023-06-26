@@ -3,6 +3,7 @@ package com.mpersand.di.modules
 import com.mpersand.data.network.api.AuthApi
 import com.mpersand.data.network.api.OrderApi
 import com.mpersand.data.network.api.UserApi
+import com.mpersand.data.network.api.ViolationApi
 import com.mpersand.di.BuildConfig
 import dagger.Module
 import dagger.Provides
@@ -57,4 +58,8 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideUserApi(retrofit: Retrofit): UserApi = retrofit.create(UserApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideViolationApi(retrofit: Retrofit): ViolationApi = retrofit.create(ViolationApi::class.java)
 }
