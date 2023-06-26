@@ -1,5 +1,6 @@
 package com.mpersand.di.modules
 
+import com.mpersand.data.network.api.AuthApi
 import com.mpersand.data.network.api.OrderApi
 import com.mpersand.di.BuildConfig
 import dagger.Module
@@ -43,6 +44,10 @@ object NetworkModule {
     fun provideConverterFactory(): GsonConverterFactory {
         return GsonConverterFactory.create()
     }
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
 
     @Provides
     @Singleton
