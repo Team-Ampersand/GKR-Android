@@ -57,4 +57,5 @@ dependencies {
     implementation(Dependency.Compose.COMPOSE_PREVIEW)
 
     implementation(Dependency.Msg.GAUTH)
+    implementation(Dependency.AndroidX.HILT_NAVIGATION_COMPOSE)
 }

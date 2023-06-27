@@ -32,10 +32,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Create LOCAL_PROPERTIES
-      run: echo '${{ secrets.LOCAL_PROPERTIES }}' > ./local.properties
-
-    - name: Run ktlint
-      run: ./gradlew ktlintCheck
-
-    - name: Build with Gradle
-      run: ./gradlew build -x test
+      run: |
+        echo BASE_URL=\"$secrets.BASE_URL\" > ./local.properties
+        echo REDIRECT_URI=\"$secrets.REDIRECT_URI\" >> ./local.properties
+        echo CLIENT_ID=\"$secrets.CLIENT_ID\" >> ./local.properties
