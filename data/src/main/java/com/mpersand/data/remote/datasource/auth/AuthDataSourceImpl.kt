@@ -8,5 +8,5 @@ import javax.inject.Inject
 class AuthDataSourceImpl @Inject constructor(
     private val authApi: AuthApi
 ): AuthDataSource {
-    override suspend fun signIn(signInRequest: SignInRequest): SignInResponse = authApi.signIn(signInRequest = signInRequest)
+    override suspend fun signIn(signInRequest: SignInRequest): SignInResponse = authApi.signIn(signInRequest)
 }
