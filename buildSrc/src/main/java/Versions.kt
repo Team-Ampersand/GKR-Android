@@ -14,6 +14,8 @@ object Versions {
     const val HILT = "2.44"
     const val HILT_NAVIGATION_COMPOSE = "1.0.0"
 
+    const val DATASTORE = "1.0.0"
+
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.10.0"
 
