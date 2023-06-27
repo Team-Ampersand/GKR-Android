@@ -51,7 +51,7 @@ fun SignInScreen(modifier: Modifier = Modifier) {
                 textAlign = TextAlign.Center
             )
         }
-        Spacer(modifier = modifier.height(14.dp))
+        Spacer(modifier = modifier.height(15.dp))
         Text(
             text = "GSM의 기자재\n대여 서비스를 이용해보세요",
             textAlign = TextAlign.Center,
@@ -62,7 +62,7 @@ fun SignInScreen(modifier: Modifier = Modifier) {
             style = Types.Style.DEFAULT,
             actionType = Types.ActionType.SIGNIN,
             colors = Types.Colors.OUTLINE,
-            horizontalPaddingValue = 87.dp
+            horizontalPaddingValue = 85.dp
         ) {
 
         }
