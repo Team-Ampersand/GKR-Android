@@ -26,9 +26,7 @@ import com.msg.gauthsignin.component.GAuthButton
 import com.msg.gauthsignin.component.utils.Types
 
 @Composable
-fun SignInScreen(
-    modifier: Modifier = Modifier
-) {
+fun SignInScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
