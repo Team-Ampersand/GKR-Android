@@ -32,13 +32,13 @@ jobs:
       run: chmod +x gradlew
 
     - name: Access BASE_URL
-      run: echo base_url=\"$secrets.BASE_URL\" > ./local.properties
+      run: echo BASE_URL=\"$secrets.BASE_URL\" > ./local.properties
 
     - name: Access CLIENT_ID
-      run: echo base_url=\"$secrets.CLIENT_ID\" > ./local.properties
+      run: echo CLIENT_ID=\"$secrets.CLIENT_ID\" > ./local.properties
 
     - name: Access REDIRECT_URI
-      run: echo base_url=\"$secrets.REDIRECT_URI\" > ./local.properties
+      run: echo REDIRECT_URI=\"$secrets.REDIRECT_URI\" > ./local.properties
 
     - name: Run ktlint
       run: ./gradlew ktlintCheck
