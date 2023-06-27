@@ -45,6 +45,7 @@ dependencies {
 
     implementation(Dependency.AndroidX.CORE_KTX)
     implementation(Dependency.AndroidX.APPCOMPAT)
+    implementation(Dependency.AndroidX.DATASTORE)
     implementation(Dependency.Google.MATERIAL)
     testImplementation(Dependency.Test.JUNIT)
     androidTestImplementation(Dependency.Test.ANDROID_JUNIT)
