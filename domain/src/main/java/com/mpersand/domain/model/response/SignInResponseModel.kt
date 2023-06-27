@@ -1,6 +1,6 @@
-package com.mpersand.data.dto.response
+package com.mpersand.domain.model.response
 
-data class SignInResponse(
+data class SignInResponseModel(
     val accessToken: String,
     val refreshToken: String,
     val accessTokenExp: String,
