@@ -73,6 +73,7 @@ dependencies {
 
     implementation(Dependency.Msg.GAUTH)
     implementation(Dependency.AndroidX.HILT_NAVIGATION_COMPOSE)
+    implementation(Dependency.Libraries.COIL)
 }
 
 fun getApiKey(propertyKey: String): String {
