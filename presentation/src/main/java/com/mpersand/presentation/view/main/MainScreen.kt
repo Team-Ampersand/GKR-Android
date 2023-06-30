@@ -232,7 +232,7 @@ fun ModalDrawerScreen(modifier: Modifier = Modifier) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
-                    val list = listOf("전체", "맥북", "모니터 & 모니터 암", "태블릿 PC", "다른 컴퓨터", "기타")
+                    val list = listOf("전체", "맥북", "갤럭시 북", "터치모니터")
 
                     itemsIndexed(list) { index, item ->
                         GKRFilterItem(title = item) {
