@@ -1,4 +1,4 @@
-package com.mpersand.presentation.view
+package com.mpersand.presentation.view.main
 
 import android.net.Uri
 import androidx.compose.foundation.Image
