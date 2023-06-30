@@ -1,5 +1,6 @@
 package com.mpersand.presentation.view.detail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -73,19 +73,26 @@ fun DetailDialogContent(
                 fontSize = 16.sp
             )
         )
-        Spacer(modifier = modifier.height(20.dp))
+        Spacer(modifier = modifier.height(5.dp))
         BasicTextField(
             value = value,
-            maxLines = 7,
+            maxLines = 6,
             onValueChange = onValueChange,
             decorationBox = { innerTextField ->
                 Row(
-                    modifier = modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(190.dp)
+                        .background(
+                            color = Color(0xFFF7F7F9),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .padding(vertical = 10.dp)
                 ) {
                     Box {
                         if (value.isEmpty()) {
                             Text(
+                                modifier = modifier.padding(start = 10.dp),
                                 text = "대여 사유를 입력해주세요",
                                 color = Color(0xFF999999)
                             )
@@ -96,11 +103,7 @@ fun DetailDialogContent(
             }
         )
         Spacer(modifier = modifier.weight(1f))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-        ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
             Button(
                 modifier = modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF26222)),
