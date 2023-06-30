@@ -31,7 +31,8 @@ fun LogoutDialog(
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
-            modifier = Modifier.size(width = 250.dp, height = 150.dp)
+            modifier = Modifier
+                .size(width = 250.dp, height = 150.dp)
                 .clip(RoundedCornerShape(10.dp))
         ) {
             LogoutDialogContent(onDismissRequest = onDismissRequest)
@@ -44,7 +45,8 @@ fun LogoutDialogContent(
     onDismissRequest: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

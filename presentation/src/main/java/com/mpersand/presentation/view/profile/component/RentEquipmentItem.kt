@@ -28,7 +28,8 @@ fun RentEquipmentItem() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier
+                    .padding(10.dp)
                     .size(width = 90.dp, height = 60.dp),
                 painter = painterResource(id = R.drawable.ic_temp_equipment_image),
                 contentDescription = "equipment image"
