@@ -60,7 +60,7 @@ fun DetailDialogContent(
     onValueChange: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(10.dp)
     ) {
