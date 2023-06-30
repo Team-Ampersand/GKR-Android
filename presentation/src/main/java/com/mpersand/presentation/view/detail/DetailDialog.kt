@@ -34,17 +34,15 @@ import androidx.compose.ui.window.Dialog
 import com.mpersand.presentation.R
 
 @Composable
-fun DetailDialog(
-    onDismissRequest: () -> Unit
-) {
+fun DetailDialog(onDismissRequest: () -> Unit) {
+    var text by remember { mutableStateOf("") }
+
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             modifier = Modifier
                 .size(width = 250.dp, height = 300.dp)
                 .clip(RoundedCornerShape(10.dp))
         ) {
-            var text by remember { mutableStateOf("") }
-
             DetailDialogContent(
                 value = text,
                 onValueChange = { text = it },
