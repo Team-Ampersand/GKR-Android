@@ -240,7 +240,7 @@ fun ModalDrawerScreen(modifier: Modifier = Modifier) {
                         }
                     }
                 }
-
+                
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
