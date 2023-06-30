@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.MaterialTheme
@@ -33,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -57,7 +57,10 @@ fun MainScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun AppBar(modifier: Modifier = Modifier) {
+fun AppBar(
+    modifier: Modifier = Modifier,
+    openModalDrawer: () -> Unit
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -75,6 +78,9 @@ fun AppBar(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = modifier.weight(1f))
         Image(
+            modifier = modifier.clickable {
+                openModalDrawer()
+            },
             painter = painterResource(id = R.drawable.ic_hamburger),
             contentDescription = "hamburger"
         )
@@ -136,13 +142,9 @@ fun ListItems(modifier: Modifier = Modifier) {
 
 @Composable
 fun ModalDrawerScreen(modifier: Modifier = Modifier) {
-    val imageUri = remember {
-        mutableStateOf<Uri?>(null)
-    }
-
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
     var selectedItem by remember { mutableStateOf(0) }
 
     ModalDrawer(
@@ -180,7 +182,7 @@ fun ModalDrawerScreen(modifier: Modifier = Modifier) {
                 Spacer(modifier = modifier.height(10.dp))
                 val content = listOf("Main Page", "Profile Page", "Rental Page")
                 val resourceId =
-                    listOf(R.drawable.ic_logo, R.drawable.ic_logo, R.drawable.ic_logo)
+                    listOf(R.drawable.ic_folder, R.drawable.ic_profile, R.drawable.ic_handshake)
 
                 repeat(3) {
                     DrawerItem(
@@ -191,11 +193,19 @@ fun ModalDrawerScreen(modifier: Modifier = Modifier) {
                                 modifier = modifier.size(20.dp, 20.dp),
                                 painter = painterResource(id = resourceId[it]),
                                 contentDescription = "image",
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Crop,
+                                colorFilter = ColorFilter.tint(
+                                    if (selectedItem == it) Color(
+                                        0xFFFF6000
+                                    ) else Color(0xFF999999)
+                                )
                             )
                         }
                     ) {
                         selectedItem = it
+                        scope.launch {
+                            drawerState.close()
+                        }
                     }
                     Spacer(modifier = modifier.height(15.dp))
 
@@ -209,7 +219,11 @@ fun ModalDrawerScreen(modifier: Modifier = Modifier) {
                     .background(Color.White)
                     .padding(horizontal = 25.dp)
             ) {
-                AppBar()
+                AppBar(openModalDrawer = {
+                    scope.launch {
+                        drawerState.open()
+                    }
+                })
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
@@ -217,8 +231,7 @@ fun ModalDrawerScreen(modifier: Modifier = Modifier) {
                         Row(modifier = modifier.fillMaxWidth()) {
                             Image(
                                 modifier = modifier.size(120.dp, 90.dp),
-                                painter = rememberAsyncImagePainter(imageUri.value)
-                                    ?: painterResource(id = R.drawable.ic_logo),
+                                painter = rememberAsyncImagePainter(imageUri) ?: painterResource(id = R.drawable.ic_logo),
                                 contentDescription = "image",
                                 contentScale = ContentScale.Crop
                             )
@@ -258,7 +271,7 @@ fun DrawerItem(
             fontSize = 10.sp,
             fontWeight = FontWeight.Thin,
             fontFamily = FontFamily(Font(R.font.fraunces_black)),
-            color = Color(0xFF000000),
+            color = if (selected) Color(0xFFFF6000) else Color(0xFF999999)
         )
     }
 }
