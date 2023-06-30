@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.DrawerValue
@@ -44,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.mpersand.presentation.R
+import com.mpersand.presentation.view.main.component.GKRFilterItem
 import kotlinx.coroutines.launch
 
 @Composable
@@ -224,6 +227,20 @@ fun ModalDrawerScreen(modifier: Modifier = Modifier) {
                         drawerState.open()
                     }
                 })
+
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    val list = listOf("전체", "맥북", "갤럭시 북", "터치모니터")
+
+                    itemsIndexed(list) { index, item ->
+                        GKRFilterItem(title = item) {
+
+                        }
+                    }
+                }
+                
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
