@@ -27,7 +27,7 @@ fun GKRFilterItem(
         onClick = onClick
     ) {
         Text(
-            modifier = Modifier.padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 5.dp),
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
             text = title,
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.inter_light)),
