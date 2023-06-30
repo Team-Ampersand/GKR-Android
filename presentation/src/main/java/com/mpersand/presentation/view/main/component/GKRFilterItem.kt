@@ -23,7 +23,7 @@ fun GKRFilterItem(
 ) {
     Card(
         shape = RoundedCornerShape(7.dp),
-        border = BorderStroke(width = 1.dp, color = Color(0xFFC9C9C9)),
+        border = BorderStroke(width = 1.dp, color = Color(0xFFF26222)),
         onClick = onClick
     ) {
         Text(
@@ -31,7 +31,7 @@ fun GKRFilterItem(
             text = title,
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.inter_light)),
-                color = Color(0xFFC9C9C9)
+                color = Color(0xFFF26222)
             )
         )
     }
