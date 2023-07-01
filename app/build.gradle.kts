@@ -59,4 +59,5 @@ dependencies {
     implementation(Dependency.Compose.COMPOSE_TOOLING)
     implementation(Dependency.Compose.COMPOSE_MATERIAL)
     implementation(Dependency.Compose.COMPOSE_PREVIEW)
+    implementation(Dependency.Compose.NAVIGATION_COMPOSE)
 }

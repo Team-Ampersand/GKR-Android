@@ -26,4 +26,6 @@ object Versions {
     const val GAUTH = "v1.0.7"
 
     const val COIL = "2.4.0"
+
+    const val NAVIGATION_COMPOSE = "2.6.0"
 }
