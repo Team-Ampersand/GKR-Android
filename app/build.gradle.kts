@@ -32,6 +32,12 @@ android {
     kotlinOptions {
         jvmTarget = ProjectProperties.Versions.JVM_TARGET
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.6"
+    }
 }
 
 dependencies {
@@ -47,4 +53,10 @@ dependencies {
 
     implementation(Dependency.Google.HILT)
     kapt(Dependency.Google.HILT_COMPILER)
+
+    implementation(Dependency.Compose.ACTIVITY_COMPOSE)
+    implementation(Dependency.Compose.COMPOSE)
+    implementation(Dependency.Compose.COMPOSE_TOOLING)
+    implementation(Dependency.Compose.COMPOSE_MATERIAL)
+    implementation(Dependency.Compose.COMPOSE_PREVIEW)
 }
