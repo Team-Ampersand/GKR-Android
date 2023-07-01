@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Surface(modifier = Modifier.fillMaxSize()) {
-
+                GKRNavHost(navController = rememberNavController(), startDestination = "signInRoute")
             }
         }
     }
