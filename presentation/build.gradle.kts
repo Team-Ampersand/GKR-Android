@@ -71,6 +71,7 @@ dependencies {
     implementation(Dependency.Compose.COMPOSE_MATERIAL)
     implementation(Dependency.Compose.COMPOSE_PREVIEW)
     implementation(Dependency.Compose.NAVIGATION_COMPOSE)
+    implementation(Dependency.Compose.LIVEDATA_COMPOSE)
 
     implementation(Dependency.Msg.GAUTH)
     implementation(Dependency.AndroidX.HILT_NAVIGATION_COMPOSE)
