@@ -125,8 +125,7 @@ fun SearchHistoryView(textState: MutableState<String>) {
     val searchHistoryList = listOf("노트북 대여", "라즈베리 파이", "노트북 대여")
 
     Text(
-        modifier = Modifier
-            .padding(15.dp),
+        modifier = Modifier.padding(15.dp),
         text = "검색 기록",
         style = TextStyle(
             fontFamily = FontFamily(Font(R.font.fraunces_black)),
@@ -153,8 +152,7 @@ fun SearchResultView(text: String) {
     val searchResultList = listOf(1,2,3,4)
 
     Text(
-        modifier = Modifier
-            .padding(15.dp),
+        modifier = Modifier.padding(15.dp),
         text = "${text}(으)로 검색한 결과",
         style = TextStyle(
             fontFamily = FontFamily(Font(R.font.fraunces_black)),
