@@ -40,7 +40,7 @@ fun GKRToolbar(
             text = title,
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.fraunces_black)),
-                color = Color(0xFF999999),
+                color = Color(0xFFFFA559),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center
             )
