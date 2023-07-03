@@ -1,4 +1,4 @@
-package com.mpersand.domain.usecase
+package com.mpersand.domain.usecase.auth
 
 import com.mpersand.domain.model.request.SignInRequestModel
 import com.mpersand.domain.repository.AuthRepository
