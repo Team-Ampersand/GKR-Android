@@ -15,7 +15,6 @@ import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-@Throws(TokenExpiredException::class)
 suspend fun <T> safeApiCall(call: suspend () -> T): T {
     return try {
         call.invoke()
