@@ -4,4 +4,5 @@ import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
 
 interface EquipmentRepository {
     suspend fun getAllEquipments(): List<EquipmentResponseModel>
+    suspend fun getEquipmentInfo(productNumber: String): EquipmentResponseModel
 }
