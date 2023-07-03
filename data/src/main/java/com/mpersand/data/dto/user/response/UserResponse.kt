@@ -1,5 +1,6 @@
 package com.mpersand.data.dto.user.response
 
+import com.mpersand.domain.model.response.UserResponseModel
 import java.util.UUID
 
 data class UserResponse(
@@ -9,7 +10,19 @@ data class UserResponse(
     val grade: Int,
     val classNum: Int,
     val number: Int,
-    val profileUrl: String,
+    val profileUrl: String?,
     val role: String,
     val isRentalRestricted: Boolean
+)
+
+fun UserResponse.asUserResponseModel() = UserResponseModel(
+    id = id,
+    email = email,
+    name = name,
+    grade = grade,
+    classNum = classNum,
+    number = number,
+    profileUrl = profileUrl,
+    role = role,
+    isRentalRestricted = isRentalRestricted
 )

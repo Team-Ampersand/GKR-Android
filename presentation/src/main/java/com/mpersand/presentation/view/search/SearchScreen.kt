@@ -85,7 +85,7 @@ fun SearchToolbar(
         IconButton(onClick = {}) {
             Icon(
                 modifier = Modifier.size(20.dp),
-                painter = painterResource(id = R.drawable.rignt_arrow),
+                painter = painterResource(id = R.drawable.ic_right_arrow),
                 contentDescription = "back right arrow",
                 tint = Color(0xFFC3C3C3)
             )

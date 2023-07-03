@@ -6,6 +6,8 @@ import com.mpersand.data.remote.datasource.equipment.EquipmentDataSource
 import com.mpersand.data.remote.datasource.equipment.EquipmentDataSourceImpl
 import com.mpersand.data.remote.datasource.order.OrderDataSource
 import com.mpersand.data.remote.datasource.order.OrderDataSourceImpl
+import com.mpersand.data.remote.datasource.user.UserDataSource
+import com.mpersand.data.remote.datasource.user.UserDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -28,4 +30,9 @@ interface RemoteDataSourceModule {
     fun bindsOrderDataSource(
         orderDataSourceImpl: OrderDataSourceImpl
     ): OrderDataSource
+
+    @Binds
+    fun bindsUserDataSource(
+        userDataSourceImpl: UserDataSourceImpl
+    ): UserDataSource
 }

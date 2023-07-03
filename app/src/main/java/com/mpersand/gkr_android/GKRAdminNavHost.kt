@@ -5,6 +5,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.mpersand.presentation.view.main.navigation.mainScreen
 import com.mpersand.presentation.view.main.navigation.navigateToMain
+import com.mpersand.presentation.view.profile.navigation.navigateProfile
+import com.mpersand.presentation.view.profile.navigation.profileScreen
+import com.mpersand.presentation.view.signin.navigation.navigateToSignIn
 import com.mpersand.presentation.view.signin.navigation.signInScreen
 
 @Composable
@@ -16,6 +19,12 @@ fun GKRNavHost(
         signInScreen(navigateToMain = {
             navController.navigateToMain()
         })
-        mainScreen()
+        mainScreen(navigateToProfile = {
+            navController.navigateProfile()
+        })
+        profileScreen(
+            navigateToMain = { navController.navigateToMain() },
+            navigateToSignIn = { navController.navigateToSignIn() }
+        )
     }
 }

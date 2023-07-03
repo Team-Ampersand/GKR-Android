@@ -28,7 +28,7 @@ fun SearchHistoryItem(
     ) {
         IconButton(onClick = {}) {
             Icon(
-                painter = painterResource(id = R.drawable.history_icon),
+                painter = painterResource(id = R.drawable.ic_history_icon),
                 contentDescription = "search history"
             )
         }
@@ -45,7 +45,7 @@ fun SearchHistoryItem(
 
         IconButton(onClick = loadTextLogic) {
             Icon(
-                painter = painterResource(id = R.drawable.diagonal_arrow),
+                painter = painterResource(id = R.drawable.ic_diagonal_arrow),
                 contentDescription = "apply arrow"
             )
         }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -23,9 +24,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,37 +38,65 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.mpersand.presentation.R
 import com.mpersand.presentation.view.component.GKRToolbar
 import com.mpersand.presentation.view.profile.component.BanHistoryCard
 import com.mpersand.presentation.view.profile.component.RentEquipmentItem
 import com.mpersand.presentation.view.profile.component.dialog.LogoutDialog
+import com.mpersand.presentation.viewmodel.UserViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    userViewModel: UserViewModel = hiltViewModel(),
+    navigateToMain: () -> Unit,
+    navigateToSignIn: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        GKRToolbar(title = "GKR")
-        ProfileUserCard()
+        GKRToolbar(
+            title = "GKR",
+            navigateToMain = navigateToMain
+        )
+        ProfileUserCard(
+            userViewModel = userViewModel,
+            navigateToSignIn = navigateToSignIn
+        )
         RentEquipmentView()
         UserBanHistoryView()
     }
 }
 
 @Composable
-fun ColumnScope.ProfileUserCard() {
+fun ColumnScope.ProfileUserCard(
+    userViewModel: UserViewModel,
+    navigateToSignIn: () -> Unit
+) {
     var logoutDialogState by remember { mutableStateOf(false) }
+    val state by userViewModel.logout.observeAsState()
+    val scope = rememberCoroutineScope()
+    val snapshot = snapshotFlow { state }
 
     if (logoutDialogState) {
-        LogoutDialog {
-            logoutDialogState = false
-        }
+        LogoutDialog(
+            onYesButtonClick = {
+                scope.launch {
+                    userViewModel.logout()
+
+                    snapshot.collect { value ->
+                        if (value == true) navigateToSignIn()
+                    }
+                }
+            },
+            onDismissRequest = { logoutDialogState = false }
+        )
     }
 
     Row(
@@ -76,17 +108,22 @@ fun ColumnScope.ProfileUserCard() {
             .background(Color.White),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        userViewModel.getUser()
+        val userResult = userViewModel.getUser.observeAsState()
+        val user = userResult.value
+
         Image(
             modifier = Modifier
                 .padding(25.dp)
-                .size(60.dp),
-            painter = painterResource(id = R.drawable.ic_user_image),
+                .size(60.dp)
+                .clip(CircleShape),
+            painter = rememberAsyncImagePainter(model = user?.profileUrl) ?: painterResource(id = R.drawable.ic_user_image),
             contentDescription = "profile"
         )
 
         Column {
             Text(
-                text = "임가람",
+                text = user?.name ?: "null",
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.fraunces_black)),
                     color = Color(0xFFC2C2C2),
@@ -95,7 +132,7 @@ fun ColumnScope.ProfileUserCard() {
             )
 
             Text(
-                text = "3학년 4반 12번",
+                text = "${user?.grade}학년 ${user?.classNum}반 ${user?.number}번",
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.fraunces_black)),
                     color = Color(0xFFC2C2C2),
@@ -196,10 +233,4 @@ fun ColumnScope.UserBanHistoryView() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun Preview() {
-    ProfileScreen()
 }

@@ -41,7 +41,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,13 +53,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = hiltViewModel(),
+    navigateToProfile: () -> Unit
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
     ) {
-        ModalDrawerScreen()
+        ModalDrawerScreen(navigateToProfile = navigateToProfile)
         viewModel.getAllEquipments()
     }
 }
@@ -150,8 +150,11 @@ fun ListItems(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ModalDrawerScreen(modifier: Modifier = Modifier) {
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+fun ModalDrawerScreen(
+    modifier: Modifier = Modifier,
+    navigateToProfile: () -> Unit
+) {
+    val imageUri by remember { mutableStateOf<Uri?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
@@ -212,6 +215,9 @@ fun ModalDrawerScreen(modifier: Modifier = Modifier) {
                         }
                     ) {
                         selectedItem = it
+
+                        if (it == 1) navigateToProfile()
+
                         scope.launch {
                             drawerState.close()
                         }
@@ -297,10 +303,4 @@ fun DrawerItem(
             color = if (selected) Color(0xFFFF6000) else Color(0xFF999999)
         )
     }
-}
-
-@Preview
-@Composable
-fun preview() {
-    MainScreen()
 }
