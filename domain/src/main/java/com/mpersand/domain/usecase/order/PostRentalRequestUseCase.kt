@@ -7,5 +7,5 @@ import javax.inject.Inject
 class PostRentalRequestUseCase @Inject constructor(
     private val orderRepository: OrderRepository
 ) {
-    suspend operator fun invoke(orderRequest: OrderRequestModel) = orderRepository.postRentalRequest(orderRequest)
+    suspend operator fun invoke(orderRequest: OrderRequestModel) = kotlin.runCatching { orderRepository.postRentalRequest(orderRequest) }
 }

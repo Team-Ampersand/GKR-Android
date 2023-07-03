@@ -14,6 +14,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,10 +29,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mpersand.presentation.R
+import com.mpersand.presentation.viewmodel.DetailViewModel
 
 @Composable
-fun DetailScreen(modifier: Modifier = Modifier) {
+fun DetailScreen(
+    modifier: Modifier = Modifier,
+    productNumber: String?,
+    viewModel: DetailViewModel = hiltViewModel()
+) {
+    LaunchedEffect(Unit) {
+        viewModel.getEquipmentInfo(checkNotNull(productNumber))
+    }
+
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var showDialog by remember { mutableStateOf(false) }
 
@@ -99,5 +110,5 @@ fun DetailScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun preview() {
-    DetailScreen()
+//    DetailScreen()
 }
