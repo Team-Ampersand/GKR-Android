@@ -7,12 +7,8 @@ import retrofit2.http.Header
 
 interface UserApi {
     @GET("user")
-    suspend fun getUser(
-        @Header("Authorization") accessToken: String
-    ): UserResponse
+    suspend fun getUser(): UserResponse
 
     @DELETE("user/logout")
-    suspend fun logout(
-        @Header("Authorization") accessToken: String
-    )
+    suspend fun logout()
 }

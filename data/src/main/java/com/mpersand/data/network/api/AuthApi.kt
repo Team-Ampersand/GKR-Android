@@ -15,7 +15,5 @@ interface AuthApi {
     ): SignInResponse
 
     @PATCH("auth/reissue")
-    suspend fun reissueToken(
-        @Header("Refresh-token") refreshToken: String
-    ): ReissueTokenResponse
+    suspend fun reissueToken(): ReissueTokenResponse
 }

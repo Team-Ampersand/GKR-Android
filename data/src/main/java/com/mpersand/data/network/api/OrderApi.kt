@@ -13,46 +13,34 @@ import retrofit2.http.POST
 
 interface OrderApi {
     @GET("order")
-    suspend fun getEquipmentRentalByUserList(
-        @Header("Authorization") accessToken: String
-    ): List<EquipmentResponse>
+    suspend fun getEquipmentRentalByUserList(): List<EquipmentResponse>
 
     @GET("order/rental")
-    suspend fun getRentalRequestList(
-        @Header("Authorization") accessToken: String
-    ): List<OrderResponse>
+    suspend fun getRentalRequestList(): List<OrderResponse>
 
     @GET("order/wait")
-    suspend fun getWaitRequestList(
-        @Header("Authorization") accessToken: String
-    ): List<OrderResponse>
+    suspend fun getWaitRequestList(): List<OrderResponse>
 
     @GET("order/noreturn")
-    suspend fun getNoReturnUserList(
-        @Header("Authorization") accessToken: String
-    ): List<UserResponse>
+    suspend fun getNoReturnUserList(): List<UserResponse>
 
     @POST("order")
     suspend fun returnRequestResult(
-        @Header("Authorization") accessToken: String,
         @Body resultRequest: ResultRequest
     )
 
     @POST("order/rental")
     suspend fun postRentalRequest(
-        @Header("Authorization") accessToken: String,
         @Body orderRequest: OrderRequest
     )
 
     @POST("order/return")
     suspend fun postReturnRequest(
-        @Header("Authorization") accessToken: String,
         @Body orderRequest: OrderRequest
     )
 
     @POST("order/extension")
     suspend fun postExtensionRequest(
-        @Header("Authorization") accessToken: String,
         @Body extensionRequest: ExtensionRequest
     )
 }
