@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.mpersand.presentation.view.signin.navigation.signInRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Surface(modifier = Modifier.fillMaxSize()) {
-                GKRNavHost(navController = rememberNavController(), startDestination = "signInRoute")
+                GKRNavHost(navController = rememberNavController(), startDestination = signInRoute)
             }
         }
     }
