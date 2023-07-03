@@ -10,7 +10,7 @@ data class EquipmentResponse(
     val rentStatus: String
 )
 
-fun EquipmentResponse.asEquipmentResponseImpl() = EquipmentResponseModel(
+fun EquipmentResponse.asEquipmentResponseModel() = EquipmentResponseModel(
     productNumber = productNumber,
     name = name,
     image = image,
