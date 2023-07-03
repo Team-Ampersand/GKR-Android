@@ -40,18 +40,18 @@ fun SignInScreen(
 ) {
     var isClicked by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (isClicked) {
-            GAuthSigninWebView(
-                clientId = BuildConfig.CLIENT_ID,
-                redirectUri = BuildConfig.REDIRECT_URI,
-            ) { code ->
-                viewModel.signIn(code)
-            }
-        } else {
+    if (isClicked) {
+        GAuthSigninWebView(
+            clientId = BuildConfig.CLIENT_ID,
+            redirectUri = BuildConfig.REDIRECT_URI,
+        ) { code ->
+            viewModel.signIn(code)
+        }
+    } else {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Spacer(modifier = modifier.height(250.dp))
             Row(
                 modifier = modifier.fillMaxWidth(),
