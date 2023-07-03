@@ -4,6 +4,8 @@ import com.mpersand.data.remote.datasource.auth.AuthDataSource
 import com.mpersand.data.remote.datasource.auth.AuthDataSourceImpl
 import com.mpersand.data.remote.datasource.equipment.EquipmentDataSource
 import com.mpersand.data.remote.datasource.equipment.EquipmentDataSourceImpl
+import com.mpersand.data.remote.datasource.order.OrderDataSource
+import com.mpersand.data.remote.datasource.order.OrderDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,4 +23,9 @@ interface RemoteDataSourceModule {
     fun bindsEquipmentDataSource(
         equipmentDataSourceImpl: EquipmentDataSourceImpl
     ): EquipmentDataSource
+
+    @Binds
+    fun bindsOrderDataSource(
+        orderDataSourceImpl: OrderDataSourceImpl
+    ): OrderDataSource
 }
