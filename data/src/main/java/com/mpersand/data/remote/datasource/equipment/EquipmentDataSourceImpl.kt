@@ -8,4 +8,5 @@ class EquipmentDataSourceImpl @Inject constructor(
     private val equipmentApi: EquipmentApi
 ): EquipmentDataSource {
     override suspend fun getAllEquipments(): List<EquipmentResponse> = equipmentApi.getAllEquipments()
+    override suspend fun getEquipmentInfo(productNumber: String): EquipmentResponse = equipmentApi.getEquipmentInfo(productNumber)
 }
