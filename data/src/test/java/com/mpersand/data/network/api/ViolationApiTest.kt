@@ -1,7 +1,7 @@
 package com.mpersand.data.network.api
 
 import com.mpersand.data.BuildConfig
-import com.mpersand.data.dto.request.ViolationRequest
+import com.mpersand.data.dto.violation.request.ViolationRequest
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test

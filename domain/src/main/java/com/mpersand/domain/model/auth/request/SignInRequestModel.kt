@@ -1,4 +1,4 @@
-package com.mpersand.domain.model.request
+package com.mpersand.domain.model.auth.request
 
 data class SignInRequestModel(
     val code: String

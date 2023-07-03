@@ -1,8 +1,8 @@
-package com.mpersand.data.dto.request
+package com.mpersand.data.dto.violation.response
 
 import java.util.UUID
 
-data class ViolationRequest(
+data class ViolationResponse(
     val userId: UUID,
     val reason: String,
     val date: String

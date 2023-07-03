@@ -1,6 +1,6 @@
-package com.mpersand.domain.usecase
+package com.mpersand.domain.usecase.auth
 
-import com.mpersand.domain.model.request.SignInRequestModel
+import com.mpersand.domain.model.auth.request.SignInRequestModel
 import com.mpersand.domain.repository.AuthRepository
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.mpersand.data.dto.response
+package com.mpersand.data.dto.user.response
 
 import java.util.UUID
 

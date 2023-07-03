@@ -1,7 +1,7 @@
 package com.mpersand.data.network.api
 
-import com.mpersand.data.dto.request.ViolationRequest
-import com.mpersand.data.dto.response.ViolationResponse
+import com.mpersand.data.dto.violation.request.ViolationRequest
+import com.mpersand.data.dto.violation.response.ViolationResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header

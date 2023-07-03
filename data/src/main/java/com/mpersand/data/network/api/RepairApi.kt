@@ -1,11 +1,10 @@
 package com.mpersand.data.network.api
 
-import com.mpersand.data.dto.request.RepairRequest
-import com.mpersand.data.dto.response.RepairResponse
+import com.mpersand.data.dto.repair.request.RepairRequest
+import com.mpersand.data.dto.repair.response.RepairResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Query

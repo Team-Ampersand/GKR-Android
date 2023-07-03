@@ -4,8 +4,8 @@ import com.mpersand.data.dto.auth.request.asSignInRequest
 import com.mpersand.data.dto.auth.response.asSignInResponseModel
 import com.mpersand.data.local.datasource.LocalDataSource
 import com.mpersand.data.remote.datasource.auth.AuthDataSource
-import com.mpersand.domain.model.request.SignInRequestModel
-import com.mpersand.domain.model.response.SignInResponseModel
+import com.mpersand.domain.model.auth.request.SignInRequestModel
+import com.mpersand.domain.model.auth.response.SignInResponseModel
 import com.mpersand.domain.repository.AuthRepository
 import javax.inject.Inject
 
