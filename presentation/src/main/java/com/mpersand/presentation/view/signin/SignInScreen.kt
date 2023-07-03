@@ -36,7 +36,8 @@ import com.msg.gauthsignin.component.utils.Types
 @Composable
 fun SignInScreen(
     modifier: Modifier = Modifier,
-    viewModel: AuthViewModel = hiltViewModel()
+    viewModel: AuthViewModel = hiltViewModel(),
+    navigateToMain: () -> Unit
 ) {
     var isClicked by remember { mutableStateOf(false) }
 
@@ -45,7 +46,10 @@ fun SignInScreen(
             clientId = BuildConfig.CLIENT_ID,
             redirectUri = BuildConfig.REDIRECT_URI,
         ) { code ->
-            viewModel.signIn(code)
+            viewModel.signIn(
+                code = code,
+                navigateToMain = navigateToMain
+            )
         }
     } else {
         Column(

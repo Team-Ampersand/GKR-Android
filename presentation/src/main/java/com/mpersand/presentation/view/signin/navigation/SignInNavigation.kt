@@ -6,8 +6,8 @@ import com.mpersand.presentation.view.signin.SignInScreen
 
 const val signInRoute = "signin_route"
 
-fun NavGraphBuilder.signInScreen() {
+fun NavGraphBuilder.signInScreen(navigateToMain: () -> Unit) {
     composable(signInRoute) {
-        SignInScreen()
+        SignInScreen(navigateToMain = navigateToMain)
     }
 }

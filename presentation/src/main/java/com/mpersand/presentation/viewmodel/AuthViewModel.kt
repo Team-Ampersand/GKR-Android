@@ -15,7 +15,7 @@ class AuthViewModel @Inject constructor(
     private val signInUseCase: SignInUseCase,
     private val saveTokenUseCase: SaveTokenUseCase
 ) : ViewModel() {
-    fun signIn(code: String) {
+    fun signIn(code: String, navigateToMain: () -> Unit) {
         viewModelScope.launch {
             signInUseCase(SignInRequestModel(code = code))
                 .onSuccess {
@@ -26,6 +26,7 @@ class AuthViewModel @Inject constructor(
                         accessTokenExp = it.accessTokenExp,
                         refreshTokenExp = it.refreshTokenExp
                     )
+                    navigateToMain()
                 }.onFailure {
                     Log.d("signIn", it.message.toString())
                 }
