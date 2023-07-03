@@ -11,8 +11,14 @@ fun NavController.navigateProfile() {
     this.navigate(profileRoute)
 }
 
-fun NavGraphBuilder.profileScreen(navigateToMain: () -> Unit) {
+fun NavGraphBuilder.profileScreen(
+    navigateToMain: () -> Unit,
+    navigateToSignIn: () -> Unit
+) {
     composable(profileRoute) {
-        ProfileScreen(navigateToMain = navigateToMain)
+        ProfileScreen(
+            navigateToMain = navigateToMain,
+            navigateToSignIn = navigateToSignIn
+        )
     }
 }
