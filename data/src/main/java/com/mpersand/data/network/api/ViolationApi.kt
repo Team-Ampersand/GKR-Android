@@ -9,13 +9,10 @@ import retrofit2.http.POST
 
 interface ViolationApi {
     @GET("violation")
-    suspend fun getViolationHistory(
-        @Header("Authorization") accessToken: String
-    ): List<ViolationResponse>
+    suspend fun getViolationHistory(): List<ViolationResponse>
 
     @POST("violation")
     suspend fun violatingRental(
-        @Header("Authorization") accessToken: String,
         @Body body: ViolationRequest
     )
 }

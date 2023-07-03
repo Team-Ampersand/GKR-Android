@@ -15,48 +15,37 @@ import retrofit2.http.Query
 
 interface EquipmentApi {
     @GET("/equipment/all")
-    suspend fun getAllEquipments(
-        @Header("Authorization") accessToken: String
-    ): List<EquipmentResponse>
+    suspend fun getAllEquipments(): List<EquipmentResponse>
 
     @POST("/equipment")
     suspend fun registerEquipment(
-        @Header("Authorization") accessToken: String,
         @Body body: EquipmentRequest
     )
 
     @GET("/equipment/notrent")
-    suspend fun getNotRentEquipment(
-        @Header("Authorization") accessToken: String
-    ): List<EquipmentResponse>
+    suspend fun getNotRentEquipment(): List<EquipmentResponse>
 
     @GET("/equipment/isrent")
-    suspend fun getIsRentEquipment(
-        @Header("Authorization") accessToken: String
-    ): List<EquipmentResponse>
+    suspend fun getIsRentEquipment(): List<EquipmentResponse>
 
     @GET("/equipment/{productNumber}")
     suspend fun getEquipmentInfo(
-        @Header("Authorization") accessToken: String,
         @Path("productNumber") productNumber: String
     ): EquipmentResponse
 
     @PATCH("/equipment/{productNumber}")
     suspend fun modifyEquipment(
-        @Header("Authorization") accessToken: String,
         @Path("productNumber") productNumber: String,
         @Body body: ModifyEquipmentRequest
     ): Response<Unit>
 
     @DELETE("/equipment/{productNumber}")
     suspend fun deleteEquipment(
-        @Header("Authorization") accessToken: String,
         @Path("productNumber") productNumber: String
     ): Response<Unit>
 
     @GET("/equipment")
     suspend fun equipmentFilter(
-        @Header("Authorization") accessToken: String,
         @Query("name") name: String
     ): List<EquipmentResponse>
 }
