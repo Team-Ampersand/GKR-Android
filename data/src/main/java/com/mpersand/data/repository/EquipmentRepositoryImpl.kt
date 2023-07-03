@@ -10,4 +10,5 @@ class EquipmentRepositoryImpl @Inject constructor(
     private val equipmentDataSource: EquipmentDataSource
 ): EquipmentRepository {
     override suspend fun getAllEquipments(): List<EquipmentResponseModel> = equipmentDataSource.getAllEquipments().map { it.asEquipmentResponseModel() }
+    override suspend fun getEquipmentInfo(productNumber: String): EquipmentResponseModel = equipmentDataSource.getEquipmentInfo(productNumber).asEquipmentResponseModel()
 }
