@@ -5,4 +5,6 @@ import com.mpersand.data.dto.order.response.EquipmentResponse
 interface EquipmentDataSource {
 
     suspend fun getAllEquipments(): List<EquipmentResponse>
+
+    suspend fun getEquipmentInfo(productNumber: String): EquipmentResponse
 }
