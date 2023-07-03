@@ -3,7 +3,7 @@ package com.mpersand.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mpersand.domain.model.request.SignInRequestModel
+import com.mpersand.domain.model.auth.request.SignInRequestModel
 import com.mpersand.domain.usecase.auth.SaveTokenUseCase
 import com.mpersand.domain.usecase.auth.SignInUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

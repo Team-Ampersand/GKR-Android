@@ -1,6 +1,6 @@
 package com.mpersand.data.dto.auth.response
 
-import com.mpersand.domain.model.response.SignInResponseModel
+import com.mpersand.domain.model.auth.response.SignInResponseModel
 
 data class SignInResponse(
     val accessToken: String,

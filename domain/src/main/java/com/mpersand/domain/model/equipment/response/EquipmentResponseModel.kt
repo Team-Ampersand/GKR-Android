@@ -1,4 +1,4 @@
-package com.mpersand.domain.model.response
+package com.mpersand.domain.model.equipment.response
 
 data class EquipmentResponseModel(
     val productNumber: String,

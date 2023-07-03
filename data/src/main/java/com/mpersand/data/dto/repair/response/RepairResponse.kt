@@ -1,4 +1,4 @@
-package com.mpersand.data.dto.response
+package com.mpersand.data.dto.repair.response
 
 data class RepairResponse(
     val productNumber: String,

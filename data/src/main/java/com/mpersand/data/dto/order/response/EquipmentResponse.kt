@@ -1,6 +1,6 @@
 package com.mpersand.data.dto.order.response
 
-import com.mpersand.domain.model.response.EquipmentResponseModel
+import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
 
 data class EquipmentResponse(
     val productNumber: String,

@@ -1,4 +1,4 @@
-package com.mpersand.domain.model.response
+package com.mpersand.domain.model.auth.response
 
 data class SignInResponseModel(
     val accessToken: String,
