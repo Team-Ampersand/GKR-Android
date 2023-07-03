@@ -40,54 +40,54 @@ fun SignInScreen(
 ) {
     var isClicked by remember { mutableStateOf(false) }
 
-    if (isClicked) {
-        GAuthSigninWebView(
-            clientId = BuildConfig.CLIENT_ID,
-            redirectUri = BuildConfig.REDIRECT_URI,
-        ) { code ->
-            viewModel.signIn(code)
-        }
-    }
-
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = modifier.height(250.dp))
-        Row(
-            modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_logo),
-                contentDescription = "logo"
-            )
-            Spacer(modifier = modifier.width(15.dp))
+        if (isClicked) {
+            GAuthSigninWebView(
+                clientId = BuildConfig.CLIENT_ID,
+                redirectUri = BuildConfig.REDIRECT_URI,
+            ) { code ->
+                viewModel.signIn(code)
+            }
+        } else {
+            Spacer(modifier = modifier.height(250.dp))
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_logo),
+                    contentDescription = "logo"
+                )
+                Spacer(modifier = modifier.width(15.dp))
+                Text(
+                    text = "GKR",
+                    fontFamily = FontFamily(Font(R.font.fraunces_black)),
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Thin,
+                    color = Color(0xFFFFA559),
+                    textAlign = TextAlign.Center
+                )
+            }
+            Spacer(modifier = modifier.height(15.dp))
             Text(
-                text = "GKR",
-                fontFamily = FontFamily(Font(R.font.fraunces_black)),
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Thin,
-                color = Color(0xFFFFA559),
-                textAlign = TextAlign.Center
+                text = "GSM의 기자재\n대여 서비스를 이용해보세요",
+                textAlign = TextAlign.Center,
+                color = Color(0xDEFFA559),
             )
+            Spacer(modifier = modifier.weight(1f))
+            GAuthButton(
+                style = Types.Style.DEFAULT,
+                actionType = Types.ActionType.SIGNIN,
+                colors = Types.Colors.OUTLINE,
+                horizontalPaddingValue = 85.dp
+            ) {
+                isClicked = true
+            }
+            Spacer(modifier = modifier.height(70.dp))
         }
-        Spacer(modifier = modifier.height(15.dp))
-        Text(
-            text = "GSM의 기자재\n대여 서비스를 이용해보세요",
-            textAlign = TextAlign.Center,
-            color = Color(0xDEFFA559),
-        )
-        Spacer(modifier = modifier.weight(1f))
-        GAuthButton(
-            style = Types.Style.DEFAULT,
-            actionType = Types.ActionType.SIGNIN,
-            colors = Types.Colors.OUTLINE,
-            horizontalPaddingValue = 85.dp
-        ) {
-            isClicked = true
-        }
-        Spacer(modifier = modifier.height(70.dp))
     }
 }
