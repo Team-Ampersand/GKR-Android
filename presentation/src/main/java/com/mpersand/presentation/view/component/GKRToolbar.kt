@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -22,14 +23,19 @@ import androidx.compose.ui.unit.sp
 import com.mpersand.presentation.R
 
 @Composable
-fun GKRToolbar(title: String) {
+fun GKRToolbar(
+    title: String,
+    navigateToMain: () -> Unit
+) {
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .height(56.dp)
             .padding(start = 15.dp, end = 15.dp)
     ) {
         Text(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .align(Alignment.Center),
             text = title,
             style = TextStyle(
@@ -40,12 +46,15 @@ fun GKRToolbar(title: String) {
             )
         )
 
-        Icon(
-            modifier = Modifier.size(30.dp)
-                .align(Alignment.CenterStart),
-            imageVector = Icons.Default.KeyboardArrowLeft,
-            contentDescription = "back arrow",
-            tint = Color(0xFF898989)
-        )
+        IconButton(onClick = navigateToMain) {
+            Icon(
+                modifier = Modifier
+                    .size(30.dp)
+                    .align(Alignment.CenterStart),
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = "back arrow",
+                tint = Color(0xFF898989)
+            )
+        }
     }
 }
