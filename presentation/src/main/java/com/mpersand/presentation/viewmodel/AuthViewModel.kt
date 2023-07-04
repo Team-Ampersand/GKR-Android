@@ -20,7 +20,7 @@ class AuthViewModel @Inject constructor(
 ) : ViewModel() {
     private val _signInUiState = MutableLiveData<UiState<Nothing>>()
     val signInUiState: LiveData<UiState<Nothing>> = _signInUiState
-    fun signIn(code: String, navigateToMain: () -> Unit) {
+    fun signIn(code: String) {
         viewModelScope.launch {
             signInUseCase(SignInRequestModel(code = code))
                 .onSuccess {
@@ -31,7 +31,6 @@ class AuthViewModel @Inject constructor(
                         refreshTokenExp = it.refreshTokenExp
                     )
                     _signInUiState.value = UiState.Success()
-                    navigateToMain()
                 }.onFailure {
                     it.exceptionHandling(
                         badRequestAction = {

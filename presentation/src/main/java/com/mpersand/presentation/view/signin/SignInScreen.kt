@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mpersand.presentation.BuildConfig
 import com.mpersand.presentation.R
+import com.mpersand.presentation.util.UiState
 import com.mpersand.presentation.viewmodel.AuthViewModel
 import com.msg.gauthsignin.GAuthSigninWebView
 import com.msg.gauthsignin.component.GAuthButton
@@ -41,15 +43,22 @@ fun SignInScreen(
 ) {
     var isClicked by remember { mutableStateOf(false) }
 
+    val uiState by viewModel.signInUiState.observeAsState()
+
+    when (uiState) {
+        is UiState.Success -> navigateToMain()
+        UiState.BadRequest -> {}
+        UiState.Loading -> {}
+        UiState.Unknown -> {}
+        else -> {}
+    }
+
     if (isClicked) {
         GAuthSigninWebView(
             clientId = BuildConfig.CLIENT_ID,
             redirectUri = BuildConfig.REDIRECT_URI,
         ) { code ->
-            viewModel.signIn(
-                code = code,
-                navigateToMain = navigateToMain
-            )
+            viewModel.signIn(code = code)
         }
     } else {
         Column(
