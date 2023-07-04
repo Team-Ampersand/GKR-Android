@@ -47,7 +47,6 @@ fun DetailScreen(
         viewModel.getEquipmentInfo(checkNotNull(productNumber))
     }
 
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     val detailUiState by viewModel.getEquipmentInfoUiState.observeAsState()
 
@@ -124,10 +123,4 @@ fun DetailScreen(
         UiState.NotFound -> {}
         else -> {}
     }
-}
-
-@Preview
-@Composable
-fun preview() {
-//    DetailScreen()
 }
