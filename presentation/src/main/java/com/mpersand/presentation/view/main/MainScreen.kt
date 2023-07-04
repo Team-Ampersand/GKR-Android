@@ -1,6 +1,5 @@
 package com.mpersand.presentation.view.main
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -136,7 +135,6 @@ fun AppBar(
 fun ListItems(
     modifier: Modifier = Modifier,
     equipment: EquipmentResponseModel,
-    navigateToDetail: (productNumber: String) -> Unit
 ) {
     Column {
         Text(
@@ -191,7 +189,6 @@ fun ModalDrawerScreen(
     navigateToDetail: (productNumber: String) -> Unit,
     navigateToProfile: () -> Unit
 ) {
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
@@ -300,16 +297,12 @@ fun ModalDrawerScreen(
                         ) {
                             Image(
                                 modifier = modifier.size(120.dp, 90.dp),
-                                painter = rememberAsyncImagePainter(it.image)
-                                    ?: painterResource(id = R.drawable.ic_logo),
+                                painter = rememberAsyncImagePainter(it.image),
                                 contentDescription = "image",
                                 contentScale = ContentScale.Crop
                             )
                             Spacer(modifier = modifier.width(10.dp))
-                            ListItems(
-                                equipment = it,
-                                navigateToDetail = navigateToDetail
-                            )
+                            ListItems(equipment = it)
                         }
                     }
                 }
