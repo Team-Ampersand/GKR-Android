@@ -1,6 +1,5 @@
 package com.mpersand.presentation.view.main
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -59,10 +58,11 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel(),
-    navigateToDetail: (productNumber: String) -> Unit
+    navigateToDetail: (productNumber: String) -> Unit,
+    navigateToProfile: () -> Unit
 ) {
     LaunchedEffect(Unit) {
-    navigateToProfile: () -> Unit 
+        viewModel.getAllEquipments()
     }
     
     val uiState by viewModel.getAllEquipmentsUiState.observeAsState()
@@ -135,23 +135,14 @@ fun AppBar(
 fun ListItems(
     modifier: Modifier = Modifier,
     equipment: EquipmentResponseModel,
-    navigateToDetail: (productNumber: String) -> Unit
 ) {
     Column {
         Text(
             modifier = modifier.padding(top = 10.dp),
-            text = "기자재 이름",
+            text = equipment.name,
             fontSize = 10.sp,
             fontWeight = FontWeight.Thin,
             fontFamily = FontFamily(Font(R.font.fraunces_black))
-        )
-        Text(
-            modifier = modifier.padding(top = 2.dp),
-            text = "대여 기간 - 06.01 ~ 07.01",
-            fontSize = 7.sp,
-            fontWeight = FontWeight.Thin,
-            fontFamily = FontFamily(Font(R.font.fraunces_black)),
-            color = Color(0xFFC0C0C0)
         )
         Text(
             modifier = modifier.padding(top = 2.dp),
@@ -163,7 +154,12 @@ fun ListItems(
         )
         Text(
             modifier = modifier.padding(top = 2.dp),
-            text = "#IOT",
+            text = when (equipment.name) {
+                "맥북" -> { "#맥북  #노트북" }
+                "갤럭시 북" -> { "#갤럭시 북  #노트북" }
+                "터치모니터" -> { "#터치모니터  #모니터" }
+                else -> { "#?" }
+            },
             fontSize = 7.sp,
             fontWeight = FontWeight.Thin,
             fontFamily = FontFamily(Font(R.font.fraunces_black)),
@@ -183,10 +179,8 @@ fun ModalDrawerScreen(
     modifier: Modifier = Modifier,
     equipments: List<EquipmentResponseModel>,
     navigateToDetail: (productNumber: String) -> Unit,
-  navigateToProfile: () -> Unit
+    navigateToProfile: () -> Unit
 ) {
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val imageUri by remember { mutableStateOf<Uri?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
@@ -239,9 +233,7 @@ fun ModalDrawerScreen(
                                 contentDescription = "image",
                                 contentScale = ContentScale.Crop,
                                 colorFilter = ColorFilter.tint(
-                                    if (selectedItem == it) Color(
-                                        0xFFFF6000
-                                    ) else Color(0xFF999999)
+                                    if (selectedItem == it) Color(0xFFFF6000) else Color(0xFF999999)
                                 )
                             )
                         }
@@ -255,7 +247,6 @@ fun ModalDrawerScreen(
                         }
                     }
                     Spacer(modifier = modifier.height(15.dp))
-
                 }
             }
         },
@@ -298,16 +289,12 @@ fun ModalDrawerScreen(
                         ) {
                             Image(
                                 modifier = modifier.size(120.dp, 90.dp),
-                                painter = rememberAsyncImagePainter(imageUri)
-                                    ?: painterResource(id = R.drawable.ic_logo),
+                                painter = rememberAsyncImagePainter(it.image),
                                 contentDescription = "image",
                                 contentScale = ContentScale.Crop
                             )
                             Spacer(modifier = modifier.width(10.dp))
-                            ListItems(
-                                equipment = it,
-                                navigateToDetail = navigateToDetail
-                            )
+                            ListItems(equipment = it)
                         }
                     }
                 }
@@ -346,9 +333,3 @@ fun DrawerItem(
         )
     }
 }
-
-//@Preview
-//@Composable
-//fun preview() {
-//    MainScreen()
-//}
