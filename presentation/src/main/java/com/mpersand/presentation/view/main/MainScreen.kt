@@ -146,14 +146,6 @@ fun ListItems(
         )
         Text(
             modifier = modifier.padding(top = 2.dp),
-            text = "대여 기간 - 06.01 ~ 07.01",
-            fontSize = 7.sp,
-            fontWeight = FontWeight.Thin,
-            fontFamily = FontFamily(Font(R.font.fraunces_black)),
-            color = Color(0xFFC0C0C0)
-        )
-        Text(
-            modifier = modifier.padding(top = 2.dp),
             text = "대여 장소 - 전문교육부",
             fontSize = 7.sp,
             fontWeight = FontWeight.Thin,
