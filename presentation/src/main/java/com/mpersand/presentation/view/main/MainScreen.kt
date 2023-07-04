@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
@@ -26,7 +27,9 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,12 +44,13 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
 import com.mpersand.presentation.R
+import com.mpersand.presentation.util.UiState
 import com.mpersand.presentation.view.main.component.GKRFilterItem
 import com.mpersand.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
@@ -54,14 +58,34 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = hiltViewModel(),
+    navigateToDetail: (productNumber: String) -> Unit
 ) {
-    Surface(
-        modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
-    ) {
-        ModalDrawerScreen()
+    LaunchedEffect(Unit) {
         viewModel.getAllEquipments()
+    }
+
+    val uiState by viewModel.getAllEquipmentsUiState.observeAsState()
+
+    when (val state = uiState) {
+        UiState.BadRequest -> TODO()
+        UiState.Loading -> TODO()
+        UiState.NotFound -> TODO()
+        is UiState.Success -> {
+            Surface(
+                modifier = modifier.fillMaxSize(),
+                color = MaterialTheme.colors.background
+            ) {
+                ModalDrawerScreen(
+                    equipments = state.data!!,
+                    navigateToDetail = navigateToDetail
+                )
+                viewModel.getAllEquipments()
+            }
+        }
+        UiState.Unauthorized -> TODO()
+        UiState.Unknown -> TODO()
+        else -> {}
     }
 }
 
@@ -107,7 +131,12 @@ fun AppBar(
 }
 
 @Composable
-fun ListItems(modifier: Modifier = Modifier) {
+fun ListItems(
+    modifier: Modifier = Modifier,
+    equipment: EquipmentResponseModel,
+    navigateToDetail: (productNumber: String) -> Unit
+) {
+//    Column(modifier = modifier.clickable { navigateToDetail(equipment.productNumber) }) {
     Column {
         Text(
             modifier = modifier.padding(top = 10.dp),
@@ -150,7 +179,11 @@ fun ListItems(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ModalDrawerScreen(modifier: Modifier = Modifier) {
+fun ModalDrawerScreen(
+    modifier: Modifier = Modifier,
+    equipments: List<EquipmentResponseModel>,
+    navigateToDetail: (productNumber: String) -> Unit
+) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -246,20 +279,30 @@ fun ModalDrawerScreen(modifier: Modifier = Modifier) {
                         }
                     }
                 }
-                
+
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(15) {
-                        Row(modifier = modifier.fillMaxWidth()) {
+                    items(equipments) {
+                        Row(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navigateToDetail(it.productNumber)
+                                }
+                        ) {
                             Image(
                                 modifier = modifier.size(120.dp, 90.dp),
-                                painter = rememberAsyncImagePainter(imageUri) ?: painterResource(id = R.drawable.ic_logo),
+                                painter = rememberAsyncImagePainter(imageUri)
+                                    ?: painterResource(id = R.drawable.ic_logo),
                                 contentDescription = "image",
                                 contentScale = ContentScale.Crop
                             )
                             Spacer(modifier = modifier.width(10.dp))
-                            ListItems()
+                            ListItems(
+                                equipment = it,
+                                navigateToDetail = navigateToDetail
+                            )
                         }
                     }
                 }
@@ -299,8 +342,8 @@ fun DrawerItem(
     }
 }
 
-@Preview
-@Composable
-fun preview() {
-    MainScreen()
-}
+//@Preview
+//@Composable
+//fun preview() {
+//    MainScreen()
+//}
