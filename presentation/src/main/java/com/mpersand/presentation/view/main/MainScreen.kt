@@ -141,7 +141,7 @@ fun ListItems(
     Column {
         Text(
             modifier = modifier.padding(top = 10.dp),
-            text = "기자재 이름",
+            text = equipment.name,
             fontSize = 10.sp,
             fontWeight = FontWeight.Thin,
             fontFamily = FontFamily(Font(R.font.fraunces_black))
@@ -164,7 +164,12 @@ fun ListItems(
         )
         Text(
             modifier = modifier.padding(top = 2.dp),
-            text = "#IOT",
+            text = when (equipment.name) {
+                "맥북" -> { "#맥북  #노트북" }
+                "갤럭시 북" -> { "#갤럭시 북  #노트북" }
+                "터치모니터" -> { "#터치모니터  #모니터" }
+                else -> { "#?" }
+            },
             fontSize = 7.sp,
             fontWeight = FontWeight.Thin,
             fontFamily = FontFamily(Font(R.font.fraunces_black)),
@@ -253,7 +258,6 @@ fun ModalDrawerScreen(
                         }
                     }
                     Spacer(modifier = modifier.height(15.dp))
-
                 }
             }
         },
@@ -296,7 +300,7 @@ fun ModalDrawerScreen(
                         ) {
                             Image(
                                 modifier = modifier.size(120.dp, 90.dp),
-                                painter = rememberAsyncImagePainter(imageUri)
+                                painter = rememberAsyncImagePainter(it.image)
                                     ?: painterResource(id = R.drawable.ic_logo),
                                 contentDescription = "image",
                                 contentScale = ContentScale.Crop
