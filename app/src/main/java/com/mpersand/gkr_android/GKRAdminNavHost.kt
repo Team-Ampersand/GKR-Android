@@ -21,5 +21,6 @@ fun GKRNavHost(
         mainScreen(navigateToDetail = {
             navController.navigateToDetail(it)
         })
+        detailScreen()
     }
 }
