@@ -263,6 +263,7 @@ fun ModalDrawerScreen(
                     }
                 })
 
+                var filterSelectState by remember { mutableStateOf(0) }
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(5.dp)
@@ -270,8 +271,11 @@ fun ModalDrawerScreen(
                     val list = listOf("전체", "맥북", "갤럭시 북", "터치모니터")
 
                     itemsIndexed(list) { index, item ->
-                        GKRFilterItem(title = item) {
-
+                        GKRFilterItem(
+                            title = item,
+                            select = index == filterSelectState
+                        ) {
+                            filterSelectState = index
                         }
                     }
                 }

@@ -19,11 +19,13 @@ import com.mpersand.presentation.R
 @Composable
 fun GKRFilterItem(
     title: String,
+    select: Boolean,
     onClick: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(7.dp),
-        border = BorderStroke(width = 1.dp, color = Color(0xFFF26222)),
+        border = BorderStroke(width = if (select) 0.dp else 1.dp, color = Color(0xFFC3C3C3)),
+        backgroundColor = if (select) Color(0xFFF26222) else Color(0xFFFAFAFA),
         onClick = onClick
     ) {
         Text(
@@ -31,7 +33,7 @@ fun GKRFilterItem(
             text = title,
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.inter_light)),
-                color = Color(0xFFF26222)
+                color = if (select) Color.White else Color(0xFFF26222)
             )
         )
     }
