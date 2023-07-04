@@ -57,7 +57,7 @@ fun DetailScreen(
         }
     }
 
-    when(val state = detailUiState) {
+    when (val state = detailUiState) {
         UiState.Loading -> {}
         is UiState.Success -> {
             Column(
@@ -67,15 +67,14 @@ fun DetailScreen(
             ) {
                 Image(
                     modifier = modifier.fillMaxWidth(),
-//            painter = rememberAsyncImagePainter(imageUri),
-                    painter = painterResource(id = R.drawable.ic_logo),
+                    painter = rememberAsyncImagePainter(state.data!!.image),
                     contentDescription = "image",
                     contentScale = ContentScale.Crop
                 )
                 Column(modifier = modifier.padding(horizontal = 26.dp)) {
                     Text(
                         modifier = modifier.padding(top = 15.dp),
-                        text = "라즈베리파이 4",
+                        text = state.data!!.name,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Thin,
                         fontFamily = FontFamily(Font(R.font.fraunces_black)),
@@ -83,7 +82,12 @@ fun DetailScreen(
                     )
                     Text(
                         modifier = modifier.padding(top = 3.dp),
-                        text = "#IOT",
+                        text = when (state.data!!.name) {
+                            "맥북" -> { "#맥북  #노트북" }
+                            "갤럭시 북" -> { "#갤럭시 북  #노트북" }
+                            "터치모니터" -> { "#터치모니터  #모니터" }
+                            else -> { "#?" }
+                        },
                         fontSize = 8.sp,
                         fontWeight = FontWeight.Thin,
                         fontFamily = FontFamily(Font(R.font.fraunces_black)),
@@ -91,7 +95,7 @@ fun DetailScreen(
                     )
                     Text(
                         modifier = modifier.padding(top = 30.dp),
-                        text = "라즈베리파이 4는 IOT 통신을 하는데 필요한 기자재입니다.",
+                        text = state.data!!.description,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Thin,
                         fontFamily = FontFamily(Font(R.font.fraunces_black)),
