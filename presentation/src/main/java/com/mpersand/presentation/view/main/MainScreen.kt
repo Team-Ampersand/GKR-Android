@@ -59,10 +59,11 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel(),
-    navigateToDetail: (productNumber: String) -> Unit
+    navigateToDetail: (productNumber: String) -> Unit,
+    navigateToProfile: () -> Unit
 ) {
     LaunchedEffect(Unit) {
-    navigateToProfile: () -> Unit 
+        viewModel.getAllEquipments()
     }
     
     val uiState by viewModel.getAllEquipmentsUiState.observeAsState()
@@ -183,10 +184,9 @@ fun ModalDrawerScreen(
     modifier: Modifier = Modifier,
     equipments: List<EquipmentResponseModel>,
     navigateToDetail: (productNumber: String) -> Unit,
-  navigateToProfile: () -> Unit
+    navigateToProfile: () -> Unit
 ) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val imageUri by remember { mutableStateOf<Uri?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
@@ -239,9 +239,7 @@ fun ModalDrawerScreen(
                                 contentDescription = "image",
                                 contentScale = ContentScale.Crop,
                                 colorFilter = ColorFilter.tint(
-                                    if (selectedItem == it) Color(
-                                        0xFFFF6000
-                                    ) else Color(0xFF999999)
+                                    if (selectedItem == it) Color(0xFFFF6000) else Color(0xFF999999)
                                 )
                             )
                         }
