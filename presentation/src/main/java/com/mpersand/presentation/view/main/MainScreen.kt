@@ -62,9 +62,9 @@ fun MainScreen(
     navigateToDetail: (productNumber: String) -> Unit
 ) {
     LaunchedEffect(Unit) {
-        viewModel.getAllEquipments()
+    navigateToProfile: () -> Unit 
     }
-
+    
     val uiState by viewModel.getAllEquipmentsUiState.observeAsState()
 
     when (val state = uiState) {
@@ -78,7 +78,8 @@ fun MainScreen(
             ) {
                 ModalDrawerScreen(
                     equipments = state.data!!,
-                    navigateToDetail = navigateToDetail
+                    navigateToDetail = navigateToDetail,
+                    navigateToProfile = navigateToProfile
                 )
                 viewModel.getAllEquipments()
             }
@@ -136,7 +137,6 @@ fun ListItems(
     equipment: EquipmentResponseModel,
     navigateToDetail: (productNumber: String) -> Unit
 ) {
-//    Column(modifier = modifier.clickable { navigateToDetail(equipment.productNumber) }) {
     Column {
         Text(
             modifier = modifier.padding(top = 10.dp),
@@ -182,9 +182,11 @@ fun ListItems(
 fun ModalDrawerScreen(
     modifier: Modifier = Modifier,
     equipments: List<EquipmentResponseModel>,
-    navigateToDetail: (productNumber: String) -> Unit
+    navigateToDetail: (productNumber: String) -> Unit,
+  navigateToProfile: () -> Unit
 ) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val imageUri by remember { mutableStateOf<Uri?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
@@ -245,6 +247,9 @@ fun ModalDrawerScreen(
                         }
                     ) {
                         selectedItem = it
+
+                        if (it == 1) navigateToProfile()
+
                         scope.launch {
                             drawerState.close()
                         }

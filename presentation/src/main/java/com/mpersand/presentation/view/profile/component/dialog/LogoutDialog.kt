@@ -27,6 +27,7 @@ import com.mpersand.presentation.R
 
 @Composable
 fun LogoutDialog(
+    onYesButtonClick: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
@@ -35,13 +36,17 @@ fun LogoutDialog(
                 .size(width = 250.dp, height = 150.dp)
                 .clip(RoundedCornerShape(10.dp))
         ) {
-            LogoutDialogContent(onDismissRequest = onDismissRequest)
+            LogoutDialogContent(
+                onYesButtonClick = onYesButtonClick,
+                onDismissRequest = onDismissRequest
+            )
         }
     }
 }
 
 @Composable
 fun LogoutDialogContent(
+    onYesButtonClick: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
     Column(
@@ -69,7 +74,10 @@ fun LogoutDialogContent(
         ) {
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF26222)),
-                onClick = {  }
+                onClick = {
+                    onYesButtonClick()
+                    onDismissRequest()
+                }
             ) {
                 Text(
                     text = "네",
