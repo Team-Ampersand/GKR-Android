@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.mpersand.presentation.R
+import com.mpersand.presentation.util.UiState
 import com.mpersand.presentation.view.component.GKRToolbar
 import com.mpersand.presentation.view.profile.component.BanHistoryCard
 import com.mpersand.presentation.view.profile.component.RentEquipmentItem
@@ -80,18 +81,25 @@ fun ColumnScope.ProfileUserCard(
     navigateToSignIn: () -> Unit
 ) {
     var logoutDialogState by remember { mutableStateOf(false) }
-    val state by userViewModel.logout.observeAsState()
-    val scope = rememberCoroutineScope()
-    val snapshot = snapshotFlow { state }
+    val logoutState by userViewModel.logout.observeAsState()
+    val snapshot = snapshotFlow { logoutState }
 
+    val scope = rememberCoroutineScope()
     if (logoutDialogState) {
         LogoutDialog(
             onYesButtonClick = {
                 scope.launch {
                     userViewModel.logout()
 
-                    snapshot.collect { value ->
-                        if (value == true) navigateToSignIn()
+                    snapshot.collect { state ->
+                        when (state) {
+                            UiState.Loading -> TODO()
+                            is UiState.Success -> navigateToSignIn()
+                            UiState.BadRequest -> TODO()
+                            UiState.Unauthorized -> TODO()
+                            UiState.NotFound -> TODO()
+                            else -> {}
+                        }
                     }
                 }
             },
@@ -109,59 +117,67 @@ fun ColumnScope.ProfileUserCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         userViewModel.getUser()
-        val userResult = userViewModel.getUser.observeAsState()
-        val user = userResult.value
+        val userResult by userViewModel.getUser.observeAsState()
 
-        Image(
-            modifier = Modifier
-                .padding(25.dp)
-                .size(60.dp)
-                .clip(CircleShape),
-            painter = rememberAsyncImagePainter(model = user?.profileUrl) ?: painterResource(id = R.drawable.ic_user_image),
-            contentDescription = "profile"
-        )
-
-        Column {
-            Text(
-                text = user?.name ?: "null",
-                style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.fraunces_black)),
-                    color = Color(0xFFC2C2C2),
-                    fontSize = 15.sp,
+        when (val state = userResult) {
+            UiState.Loading -> TODO()
+            is UiState.Success -> {
+                Image(
+                    modifier = Modifier
+                        .padding(25.dp)
+                        .size(60.dp)
+                        .clip(CircleShape),
+                    painter = rememberAsyncImagePainter(model = state.data?.profileUrl) ?: painterResource(id = R.drawable.ic_user_image),
+                    contentDescription = "profile"
                 )
-            )
 
-            Text(
-                text = "${user?.grade}학년 ${user?.classNum}반 ${user?.number}번",
-                style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.fraunces_black)),
-                    color = Color(0xFFC2C2C2),
-                    fontSize = 10.sp
-                )
-            )
+                Column {
+                    Text(
+                        text = state.data?.name ?: "null",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.fraunces_black)),
+                            color = Color(0xFFC2C2C2),
+                            fontSize = 15.sp,
+                        )
+                    )
 
-            Text(
-                text = "대여한 물품 1개",
-                style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.fraunces_black)),
-                    color = Color(0xFFC2C2C2),
-                    fontSize = 10.sp
-                )
-            )
-        }
+                    Text(
+                        text = "${state.data?.grade}학년 ${state.data?.classNum}반 ${state.data?.number}번",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.fraunces_black)),
+                            color = Color(0xFFC2C2C2),
+                            fontSize = 10.sp
+                        )
+                    )
 
-        Spacer(modifier = Modifier.weight(1f))
-        
-        IconButton(
-            modifier = Modifier.padding(end = 25.dp),
-            onClick = { logoutDialogState = logoutDialogState.not() }
-        ) {
-            Icon(
-                modifier = Modifier.size(25.dp),
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "profile more vert",
-                tint = Color(0xFF999999)
-            )
+                    Text(
+                        text = "대여한 물품 1개",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.fraunces_black)),
+                            color = Color(0xFFC2C2C2),
+                            fontSize = 10.sp
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                IconButton(
+                    modifier = Modifier.padding(end = 25.dp),
+                    onClick = { logoutDialogState = logoutDialogState.not() }
+                ) {
+                    Icon(
+                        modifier = Modifier.size(25.dp),
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "profile more vert",
+                        tint = Color(0xFF999999)
+                    )
+                }
+            }
+            UiState.BadRequest -> TODO()
+            UiState.Unauthorized -> TODO()
+            UiState.NotFound -> TODO()
+            else -> {}
         }
     }
 }
