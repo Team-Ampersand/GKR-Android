@@ -8,9 +8,11 @@ import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
 import com.mpersand.domain.usecase.equipment.EquipmentFilterUseCase
 import com.mpersand.presentation.util.UiState
 import com.mpersand.presentation.util.exceptionHandling
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SearchViewModel @Inject constructor(
     private val equipmentFilterUseCase: EquipmentFilterUseCase
 ): ViewModel() {
@@ -25,7 +27,6 @@ class SearchViewModel @Inject constructor(
                 it.exceptionHandling(
                     badRequestAction = { _equipmentFilter.value = UiState.BadRequest },
                     unauthorizedAction = { _equipmentFilter.value = UiState.Unauthorized },
-                    forbiddenAction = { _equipmentFilter.value = UiState.Forbidden },
                     notFoundAction = { _equipmentFilter.value = UiState.NotFound }
                 )
             }
