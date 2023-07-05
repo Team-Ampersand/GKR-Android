@@ -46,11 +46,12 @@ fun GKRToolbar(
             )
         )
 
-        IconButton(onClick = navigateToMain) {
+        IconButton(
+            modifier = Modifier.align(Alignment.CenterStart),
+            onClick = navigateToMain
+        ) {
             Icon(
-                modifier = Modifier
-                    .size(30.dp)
-                    .align(Alignment.CenterStart),
+                modifier = Modifier.size(24.dp),
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = "back arrow",
                 tint = Color(0xFF898989)
