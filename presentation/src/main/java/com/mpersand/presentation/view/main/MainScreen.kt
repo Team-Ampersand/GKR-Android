@@ -59,7 +59,8 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel(),
     navigateToDetail: (productNumber: String) -> Unit,
-    navigateToProfile: () -> Unit
+    navigateToProfile: () -> Unit,
+    navigateToSearch: () -> Unit
 ) {
     LaunchedEffect(Unit) {
         viewModel.getAllEquipments()

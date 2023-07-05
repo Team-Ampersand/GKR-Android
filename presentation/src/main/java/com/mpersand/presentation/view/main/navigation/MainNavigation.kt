@@ -12,13 +12,15 @@ fun NavController.navigateToMain() {
 }
 
 fun NavGraphBuilder.mainScreen(
-  navigateToDetail: (productNumber: String) -> Unit,
-  navigateToProfile: () -> Unit
+    navigateToDetail: (productNumber: String) -> Unit,
+    navigateToProfile: () -> Unit,
+    navigateToSearch: () -> Unit
 ) {
     composable(mainRoute) {
         MainScreen(
-          navigateToDetail = navigateToDetail,
-          navigateToProfile = navigateToProfile
+            navigateToDetail = navigateToDetail,
+            navigateToProfile = navigateToProfile,
+            navigateToSearch = navigateToSearch
         )
     }
 }

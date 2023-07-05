@@ -39,7 +39,7 @@ import com.mpersand.presentation.view.search.component.SearchHistoryItem
 import com.mpersand.presentation.view.search.component.SearchResultItem
 
 @Composable
-fun SearchScreen() {
+fun SearchScreen(navigateToMain: () -> Unit) {
     val textChange = remember { mutableStateOf(false) }
 
     Column(
@@ -169,10 +169,4 @@ fun SearchResultView(text: String) {
             SearchResultItem()
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewSearchScreen() {
-    SearchScreen()
 }
