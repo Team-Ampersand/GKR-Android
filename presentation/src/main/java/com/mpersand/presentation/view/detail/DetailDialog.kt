@@ -19,6 +19,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,24 +32,54 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.mpersand.domain.model.order.request.OrderRequestModel
 import com.mpersand.presentation.R
+import com.mpersand.presentation.util.UiState
+import com.mpersand.presentation.viewmodel.DetailViewModel
 
 @Composable
-fun DetailDialog(onDismissRequest: () -> Unit) {
+fun DetailDialog(
+    viewModel: DetailViewModel = hiltViewModel(),
+    onDismissRequest: () -> Unit,
+    showSnackBar: () -> Unit
+) {
     var text by remember { mutableStateOf("") }
+    val detailUiState by viewModel.getEquipmentInfoUiState.observeAsState()
 
-    Dialog(onDismissRequest = onDismissRequest) {
-        Surface(
-            modifier = Modifier
-                .size(width = 250.dp, height = 300.dp)
-                .clip(RoundedCornerShape(10.dp))
-        ) {
-            DetailDialogContent(
-                value = text,
-                onValueChange = { text = it },
-                onDismissRequest = onDismissRequest
-            )
+    when (val state = detailUiState) {
+        UiState.Loading -> {}
+        is UiState.Success -> {
+            Dialog(onDismissRequest = onDismissRequest) {
+                Surface(
+                    modifier = Modifier
+                        .size(width = 250.dp, height = 300.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                ) {
+                    DetailDialogContent(
+                        value = text,
+                        onValueChange = { text = it },
+                        onDismissRequest = onDismissRequest,
+                        postRentalRequest = {
+                            viewModel.postRentalRequest(
+                                OrderRequestModel(
+                                    equipmentId = state.data!!.productNumber,
+                                    reason = text,
+                                    state = "WAITING_STATE",
+                                    decision = "RENTAL_ACCEPT"
+                                )
+                            )
+                            onDismissRequest()
+                            showSnackBar()
+                        }
+                    )
+                }
+            }
         }
+        UiState.BadRequest -> {}
+        UiState.Unauthorized -> {}
+        UiState.NotFound -> {}
+        else -> {}
     }
 }
 
@@ -57,7 +88,8 @@ fun DetailDialogContent(
     modifier: Modifier = Modifier,
     value: String,
     onDismissRequest: () -> Unit,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    postRentalRequest: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -87,10 +119,9 @@ fun DetailDialogContent(
                         )
                         .padding(vertical = 10.dp)
                 ) {
-                    Box {
+                    Box(modifier = modifier.padding(start = 10.dp)) {
                         if (value.isEmpty()) {
                             Text(
-                                modifier = modifier.padding(start = 10.dp),
                                 text = "대여 사유를 입력해주세요",
                                 color = Color(0xFF999999)
                             )
@@ -105,7 +136,7 @@ fun DetailDialogContent(
             Button(
                 modifier = modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF26222)),
-                onClick = { onDismissRequest() }
+                onClick = { postRentalRequest() }
             ) {
                 Text(
                     text = "요청하기",
@@ -116,7 +147,7 @@ fun DetailDialogContent(
                     )
                 )
             }
-            Spacer(modifier =  modifier.width(10.dp))
+            Spacer(modifier = modifier.width(10.dp))
             Button(
                 modifier = modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFFA559)),
