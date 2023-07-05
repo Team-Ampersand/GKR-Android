@@ -2,6 +2,7 @@ package com.mpersand.presentation.view.search.component
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -14,6 +15,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpersand.presentation.R
 
@@ -28,6 +30,7 @@ fun SearchHistoryItem(
     ) {
         IconButton(onClick = {}) {
             Icon(
+                modifier = Modifier.size(24.dp),
                 painter = painterResource(id = R.drawable.ic_history_icon),
                 contentDescription = "search history"
             )
@@ -45,6 +48,7 @@ fun SearchHistoryItem(
 
         IconButton(onClick = loadTextLogic) {
             Icon(
+                modifier = Modifier.size(24.dp),
                 painter = painterResource(id = R.drawable.ic_diagonal_arrow),
                 contentDescription = "apply arrow"
             )

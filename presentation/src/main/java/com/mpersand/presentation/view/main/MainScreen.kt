@@ -59,7 +59,8 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel(),
     navigateToDetail: (productNumber: String) -> Unit,
-    navigateToProfile: () -> Unit
+    navigateToProfile: () -> Unit,
+    navigateToSearch: () -> Unit
 ) {
     LaunchedEffect(Unit) {
         viewModel.getAllEquipments()
@@ -79,7 +80,8 @@ fun MainScreen(
                 ModalDrawerScreen(
                     equipments = state.data!!,
                     navigateToDetail = navigateToDetail,
-                    navigateToProfile = navigateToProfile
+                    navigateToProfile = navigateToProfile,
+                    navigateToSearch = navigateToSearch
                 )
                 viewModel.getAllEquipments()
             }
@@ -93,7 +95,8 @@ fun MainScreen(
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
-    openModalDrawer: () -> Unit
+    openModalDrawer: () -> Unit,
+    navigateToSearch: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -120,8 +123,12 @@ fun AppBar(
         )
         Spacer(modifier = modifier.width(16.dp))
         Image(
+            modifier = Modifier.clickable {
+                navigateToSearch()
+            },
             painter = painterResource(id = R.drawable.ic_search),
-            contentDescription = "search"
+            contentDescription = "search",
+            colorFilter = ColorFilter.tint(color = Color(0xFF000000))
         )
         Spacer(modifier = modifier.width(16.dp))
         Image(
@@ -179,7 +186,8 @@ fun ModalDrawerScreen(
     modifier: Modifier = Modifier,
     equipments: List<EquipmentResponseModel>,
     navigateToDetail: (productNumber: String) -> Unit,
-    navigateToProfile: () -> Unit
+    navigateToProfile: () -> Unit,
+    navigateToSearch: () -> Unit
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -218,9 +226,8 @@ fun ModalDrawerScreen(
                     thickness = 1.dp
                 )
                 Spacer(modifier = modifier.height(10.dp))
-                val content = listOf("Main Page", "Profile Page", "Rental Page")
-                val resourceId =
-                    listOf(R.drawable.ic_folder, R.drawable.ic_profile, R.drawable.ic_handshake)
+                val content = listOf("메인 페이지", "내 프로필", "검색하기")
+                val resourceId = listOf(R.drawable.ic_folder, R.drawable.ic_profile, R.drawable.ic_search)
 
                 repeat(3) {
                     DrawerItem(
@@ -257,11 +264,14 @@ fun ModalDrawerScreen(
                     .background(Color.White)
                     .padding(horizontal = 25.dp)
             ) {
-                AppBar(openModalDrawer = {
-                    scope.launch {
-                        drawerState.open()
-                    }
-                })
+                AppBar(
+                    openModalDrawer = {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    },
+                    navigateToSearch = navigateToSearch
+                )
 
                 var filterSelectState by remember { mutableStateOf(0) }
                 LazyRow(

@@ -1,5 +1,6 @@
 package com.mpersand.presentation.view.search
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,26 +22,35 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mpersand.presentation.R
+import com.mpersand.presentation.util.UiState
 import com.mpersand.presentation.view.search.component.SearchHistoryItem
 import com.mpersand.presentation.view.search.component.SearchResultItem
+import com.mpersand.presentation.viewmodel.SearchViewModel
 
 @Composable
-fun SearchScreen() {
+fun SearchScreen(
+    searchViewModel: SearchViewModel = hiltViewModel(),
+    navigateToMain: () -> Unit
+) {
     val textChange = remember { mutableStateOf(false) }
+    val isTextChanged = remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -55,17 +65,26 @@ fun SearchScreen() {
 
         SearchToolbar(
             value = textState.value,
-            onValueChange = { textState.value = it },
-            onSearchClick = { textChange.value = false
-            }
+            onValueChange = {
+                textState.value = it
+                isTextChanged.value = true
+            },
+            onSearchClick = {
+                textChange.value = false
+                isTextChanged.value = false
+            },
+            onBackIconClick = navigateToMain
         )
         Divider()
 
         if (textState.value.isEmpty())
             SearchHistoryView(textState)
 
-        if (!textChange.value && textState.value.isNotEmpty())
-            SearchResultView(text = textState.value)
+        if (!textChange.value && !isTextChanged.value && textState.value.isNotEmpty())
+            SearchResultView(
+                text = textState.value,
+                searchViewModel = searchViewModel
+            )
     }
 }
 
@@ -73,7 +92,8 @@ fun SearchScreen() {
 fun SearchToolbar(
     value: String,
     onValueChange: (String) -> Unit,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    onBackIconClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -82,7 +102,7 @@ fun SearchToolbar(
             .background(Color(0xFFFAFAFA)),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = {}) {
+        IconButton(onClick = onBackIconClick) {
             Icon(
                 modifier = Modifier.size(20.dp),
                 painter = painterResource(id = R.drawable.ic_right_arrow),
@@ -148,31 +168,38 @@ fun SearchHistoryView(textState: MutableState<String>) {
 }
 
 @Composable
-fun SearchResultView(text: String) {
-    val searchResultList = listOf(1,2,3,4)
+fun SearchResultView(
+    text: String,
+    searchViewModel: SearchViewModel
+) {
+    searchViewModel.searchEquipment(text)
+    val searchResult by searchViewModel.equipmentFilter.observeAsState()
 
-    Text(
-        modifier = Modifier.padding(15.dp),
-        text = "${text}(으)로 검색한 결과",
-        style = TextStyle(
-            fontFamily = FontFamily(Font(R.font.fraunces_black)),
-            fontSize = 10.sp,
-            color = Color(0xFFC3C3C3)
-        )
-    )
+    val context = LocalContext.current
+    when (val state = searchResult) {
+        UiState.Loading -> TODO()
+        is UiState.Success -> {
+            Text(
+                modifier = Modifier.padding(15.dp),
+                text = "${text}(으)로 검색한 결과",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.fraunces_black)),
+                    fontSize = 10.sp,
+                    color = Color(0xFFC3C3C3)
+                )
+            )
 
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
-    ) {
-        items(searchResultList) {
-            SearchResultItem()
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                items(state.data!!) {
+                    SearchResultItem(data = it)
+                }
+            }
         }
+        UiState.BadRequest -> TODO()
+        UiState.NotFound -> Toast.makeText(context, "검색 결과가 없음", Toast.LENGTH_SHORT).show()
+        else -> {}
     }
-}
-
-@Preview
-@Composable
-fun PreviewSearchScreen() {
-    SearchScreen()
 }
