@@ -72,7 +72,7 @@ fun SearchScreen(
             onSearchClick = {
                 textChange.value = false
                 isTextChanged.value = false
-                            },
+            },
             onBackIconClick = navigateToMain
         )
         Divider()
