@@ -45,6 +45,7 @@ fun DetailScreen(
 ) {
     var showDialog by remember { mutableStateOf(false) }
     val detailUiState by viewModel.getEquipmentInfoUiState.observeAsState()
+    val postRentalRequestUiState by viewModel.postRentalRequestUiState.observeAsState()
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
@@ -55,8 +56,15 @@ fun DetailScreen(
     Scaffold(scaffoldState = scaffoldState) { paddingValues ->
         if (showDialog) {
             DetailDialog(onDismissRequest = { showDialog = false }) {
-                coroutineScope.launch {
-                    scaffoldState.snackbarHostState.showSnackbar("대여 기간은 1달입니다.")
+                when(postRentalRequestUiState) {
+                    is UiState.Success -> {
+                        coroutineScope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar("대여 요청이 완료되었습니다.")
+                        }
+                    }
+                    else -> { coroutineScope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar("예상 못 한 오류가 발생 했습니다.\n 개발자에게 문의 해주세요.")
+                    } }
                 }
             }
         }
