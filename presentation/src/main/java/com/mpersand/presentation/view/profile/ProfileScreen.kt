@@ -70,7 +70,7 @@ fun ProfileScreen(
             profileViewModel = profileViewModel,
             navigateToSignIn = navigateToSignIn
         )
-        RentEquipmentView()
+        RentEquipmentView(profileViewModel = profileViewModel)
         UserBanHistoryView()
     }
 }
@@ -183,7 +183,7 @@ fun ColumnScope.ProfileUserCard(
 }
 
 @Composable
-fun ColumnScope.RentEquipmentView() {
+fun ColumnScope.RentEquipmentView(profileViewModel: ProfileViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -199,6 +199,9 @@ fun ColumnScope.RentEquipmentView() {
             )
         )
 
+        profileViewModel.getEquipmentRentalListByUser()
+        val equipmentRentalList by profileViewModel.getListByUser.observeAsState()
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -209,9 +212,17 @@ fun ColumnScope.RentEquipmentView() {
             contentPadding = PaddingValues(5.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            val list = listOf(1,2,3,4)
-            items(list) {
-                RentEquipmentItem()
+            when (val state = equipmentRentalList) {
+                UiState.Loading -> TODO()
+                is UiState.Success -> {
+                    items(state.data!!) {
+                        RentEquipmentItem()
+                    }
+                }
+                UiState.BadRequest -> TODO()
+                UiState.Unauthorized -> TODO()
+                UiState.NotFound -> TODO()
+                else -> {}
             }
         }
     }
