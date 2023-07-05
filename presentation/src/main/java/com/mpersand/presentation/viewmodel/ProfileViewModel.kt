@@ -77,13 +77,13 @@ class ProfileViewModel @Inject constructor(
             }.onFailure {
                 it.exceptionHandling(
                     badRequestAction = {
-                        UiState.BadRequest
+                        _getListByUser.value = UiState.BadRequest
                     },
                     unauthorizedAction = {
-                        UiState.Unauthorized
+                        _getListByUser.value = UiState.Unauthorized
                     },
                     notFoundAction = {
-                        UiState.NotFound
+                        _getListByUser.value = UiState.NotFound
                     }
                 )
             }
