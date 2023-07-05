@@ -48,12 +48,12 @@ import com.mpersand.presentation.view.component.GKRToolbar
 import com.mpersand.presentation.view.profile.component.BanHistoryCard
 import com.mpersand.presentation.view.profile.component.RentEquipmentItem
 import com.mpersand.presentation.view.profile.component.dialog.LogoutDialog
-import com.mpersand.presentation.viewmodel.UserViewModel
+import com.mpersand.presentation.viewmodel.ProfileViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
-    userViewModel: UserViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel(),
     navigateToMain: () -> Unit,
     navigateToSignIn: () -> Unit
 ) {
@@ -67,21 +67,21 @@ fun ProfileScreen(
             navigateToMain = navigateToMain
         )
         ProfileUserCard(
-            userViewModel = userViewModel,
+            profileViewModel = profileViewModel,
             navigateToSignIn = navigateToSignIn
         )
-        RentEquipmentView()
+        RentEquipmentView(profileViewModel = profileViewModel)
         UserBanHistoryView()
     }
 }
 
 @Composable
 fun ColumnScope.ProfileUserCard(
-    userViewModel: UserViewModel,
+    profileViewModel: ProfileViewModel,
     navigateToSignIn: () -> Unit
 ) {
     var logoutDialogState by remember { mutableStateOf(false) }
-    val logoutState by userViewModel.logout.observeAsState()
+    val logoutState by profileViewModel.logout.observeAsState()
     val snapshot = snapshotFlow { logoutState }
 
     val scope = rememberCoroutineScope()
@@ -89,7 +89,7 @@ fun ColumnScope.ProfileUserCard(
         LogoutDialog(
             onYesButtonClick = {
                 scope.launch {
-                    userViewModel.logout()
+                    profileViewModel.logout()
 
                     snapshot.collect { state ->
                         when (state) {
@@ -116,8 +116,8 @@ fun ColumnScope.ProfileUserCard(
             .background(Color.White),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        userViewModel.getUser()
-        val userResult by userViewModel.getUser.observeAsState()
+        profileViewModel.getUser()
+        val userResult by profileViewModel.getUser.observeAsState()
 
         when (val state = userResult) {
             UiState.Loading -> TODO()
@@ -183,7 +183,7 @@ fun ColumnScope.ProfileUserCard(
 }
 
 @Composable
-fun ColumnScope.RentEquipmentView() {
+fun ColumnScope.RentEquipmentView(profileViewModel: ProfileViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -199,6 +199,9 @@ fun ColumnScope.RentEquipmentView() {
             )
         )
 
+        profileViewModel.getEquipmentRentalListByUser()
+        val equipmentRentalList by profileViewModel.getListByUser.observeAsState()
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -209,9 +212,17 @@ fun ColumnScope.RentEquipmentView() {
             contentPadding = PaddingValues(5.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            val list = listOf(1,2,3,4)
-            items(list) {
-                RentEquipmentItem()
+            when (val state = equipmentRentalList) {
+                UiState.Loading -> TODO()
+                is UiState.Success -> {
+                    items(state.data!!) {
+                        RentEquipmentItem()
+                    }
+                }
+                UiState.BadRequest -> TODO()
+                UiState.Unauthorized -> TODO()
+                UiState.NotFound -> TODO()
+                else -> {}
             }
         }
     }
