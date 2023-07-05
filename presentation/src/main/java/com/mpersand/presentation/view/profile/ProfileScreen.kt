@@ -49,11 +49,13 @@ import com.mpersand.presentation.view.profile.component.BanHistoryCard
 import com.mpersand.presentation.view.profile.component.RentEquipmentItem
 import com.mpersand.presentation.view.profile.component.dialog.LogoutDialog
 import com.mpersand.presentation.viewmodel.ProfileViewModel
+import com.mpersand.presentation.viewmodel.ViolationViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
     profileViewModel: ProfileViewModel = hiltViewModel(),
+    violationViewModel: ViolationViewModel = hiltViewModel(),
     navigateToMain: () -> Unit,
     navigateToSignIn: () -> Unit
 ) {
@@ -71,7 +73,7 @@ fun ProfileScreen(
             navigateToSignIn = navigateToSignIn
         )
         RentEquipmentView(profileViewModel = profileViewModel)
-        UserBanHistoryView()
+        UserBanHistoryView(violationViewModel = violationViewModel)
     }
 }
 
@@ -229,7 +231,10 @@ fun ColumnScope.RentEquipmentView(profileViewModel: ProfileViewModel) {
 }
 
 @Composable
-fun ColumnScope.UserBanHistoryView() {
+fun ColumnScope.UserBanHistoryView(violationViewModel: ViolationViewModel) {
+    violationViewModel.getViolationHistory()
+    val getHistoryState by violationViewModel.getViolationHistory.observeAsState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -254,9 +259,17 @@ fun ColumnScope.UserBanHistoryView() {
             contentPadding = PaddingValues(5.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            val list = listOf(1,2,3,4)
-            items(list) {
-                BanHistoryCard()
+            when (val state = getHistoryState) {
+                UiState.Loading -> TODO()
+                is UiState.Success -> {
+                    items(state.data!!) { data ->
+                        BanHistoryCard(data = data)
+                    }
+                }
+                UiState.BadRequest -> TODO()
+                UiState.Unauthorized -> TODO()
+                UiState.NotFound -> TODO()
+                else -> {}
             }
         }
     }
