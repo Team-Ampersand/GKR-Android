@@ -44,7 +44,7 @@ fun DetailScreen(
     viewModel: DetailViewModel = hiltViewModel()
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    val detailUiState by viewModel.getEquipmentInfoUiState.observeAsState()
+    val getEquipmentInfoUiState by viewModel.getEquipmentInfoUiState.observeAsState()
     val postRentalRequestUiState by viewModel.postRentalRequestUiState.observeAsState()
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
@@ -69,7 +69,7 @@ fun DetailScreen(
             }
         }
 
-        when (val state = detailUiState) {
+        when (val state = getEquipmentInfoUiState) {
             UiState.Loading -> {}
             is UiState.Success -> {
                 Column(
