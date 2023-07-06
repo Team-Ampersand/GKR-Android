@@ -16,10 +16,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mpersand.domain.model.violation.ViolationResponseModel
 import com.mpersand.presentation.R
 
 @Composable
-fun BanHistoryCard() {
+fun BanHistoryCard(data: ViolationResponseModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         border = BorderStroke(width = 1.dp, color = Color(0xFFD3D3D3))
@@ -32,16 +33,18 @@ fun BanHistoryCard() {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "[제재 사항] 기자재 반납일 지남",
+                    text = data.reason,
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.inter_black)),
                         fontSize = 15.sp
-                    )
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "안녕하세요 GKR 입니다.",
+                    text = data.reason,
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.inter_light)),
                         fontSize = 12.sp
@@ -52,7 +55,7 @@ fun BanHistoryCard() {
             }
             
             Text(
-                text = "2023.06.26",
+                text = data.date,
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.inter_light)),
                     fontSize = 12.sp,

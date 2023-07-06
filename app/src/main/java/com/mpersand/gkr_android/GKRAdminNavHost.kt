@@ -9,6 +9,8 @@ import com.mpersand.presentation.view.main.navigation.mainScreen
 import com.mpersand.presentation.view.main.navigation.navigateToMain
 import com.mpersand.presentation.view.profile.navigation.navigateProfile
 import com.mpersand.presentation.view.profile.navigation.profileScreen
+import com.mpersand.presentation.view.search.navigation.navigateToSearch
+import com.mpersand.presentation.view.search.navigation.searchScreen
 import com.mpersand.presentation.view.signin.navigation.navigateToSignIn
 import com.mpersand.presentation.view.signin.navigation.signInScreen
 
@@ -21,17 +23,22 @@ fun GKRNavHost(
         signInScreen(navigateToMain = {
             navController.navigateToMain()
         })
-        
+
         mainScreen(
-          navigateToDetail = { navController.navigateToDetail(it) },
-          navigateToProfile = { navController.navigateProfile() }
+            navigateToDetail = { navController.navigateToDetail(it) },
+            navigateToProfile = { navController.navigateProfile() },
+            navigateToSearch = { navController.navigateToSearch() }
         )
-        
+
         profileScreen(
             navigateToMain = { navController.navigateToMain() },
             navigateToSignIn = { navController.navigateToSignIn() }
         )
-        
+
         detailScreen()
+
+        searchScreen(
+            navigateToMain = { navController.navigateToMain() }
+        )
     }
 }

@@ -27,12 +27,14 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,12 +63,18 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel(),
     navigateToDetail: (productNumber: String) -> Unit,
-    navigateToProfile: () -> Unit
+    navigateToProfile: () -> Unit,
+    navigateToSearch: () -> Unit
 ) {
     LaunchedEffect(Unit) {
         viewModel.getAllEquipments()
         viewModel.getUserInfo()
     }
+    val uiState by viewModel.getAllEquipmentsUiState.observeAsState()
+    val filterRes by viewModel.mainFilter.observeAsState()
+
+    val resultSnapshot = snapshotFlow { filterRes }
+    val snapshotScope = rememberCoroutineScope()
 
     val getAllEquipmentUiState by viewModel.getAllEquipmentsUiState.observeAsState()
     val getUserInfoUiState by viewModel.getUserInfoUiState.observeAsState()
@@ -92,6 +100,35 @@ fun MainScreen(
                 UiState.Unauthorized -> TODO()
                 UiState.NotFound -> TODO()
                 else -> {}
+                
+            Surface(
+                modifier = modifier.fillMaxSize(),
+                color = MaterialTheme.colors.background
+            ) {
+                val filterState: MutableState<List<EquipmentResponseModel>> = remember { mutableStateOf(state.data!!) }
+
+                ModalDrawerScreen(
+                    filterState = filterState,
+                    mainFilter = {
+                        viewModel.mainFilter(it)
+
+                        snapshotScope.launch {
+                            resultSnapshot.collect { data ->
+                                when (data) {
+                                    UiState.Loading -> TODO()
+                                    is UiState.Success -> filterState.value = data.data!!
+                                    UiState.BadRequest -> TODO()
+                                    UiState.Unauthorized -> TODO()
+                                    UiState.NotFound -> filterState.value = emptyList()
+                                    else -> {}
+                                }
+                            }
+                        }
+                    },
+                    navigateToDetail = navigateToDetail,
+                    navigateToProfile = navigateToProfile,
+                    navigateToSearch = navigateToSearch
+                )
             }
         }
         UiState.BadRequest -> TODO()
@@ -106,7 +143,8 @@ fun MainScreen(
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
-    openModalDrawer: () -> Unit
+    openModalDrawer: () -> Unit,
+    navigateToSearch: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -133,8 +171,12 @@ fun AppBar(
         )
         Spacer(modifier = modifier.width(16.dp))
         Image(
+            modifier = Modifier.clickable {
+                navigateToSearch()
+            },
             painter = painterResource(id = R.drawable.ic_search),
-            contentDescription = "search"
+            contentDescription = "search",
+            colorFilter = ColorFilter.tint(color = Color(0xFF000000))
         )
         Spacer(modifier = modifier.width(16.dp))
         Image(
@@ -203,8 +245,11 @@ fun ModalDrawerScreen(
     modifier: Modifier = Modifier,
     equipments: List<EquipmentResponseModel>,
     userInfo: UserResponseModel,
+    filterState: MutableState<List<EquipmentResponseModel>>,
+    mainFilter: (String) -> Unit,
     navigateToDetail: (productNumber: String) -> Unit,
-    navigateToProfile: () -> Unit
+    navigateToProfile: () -> Unit,
+    navigateToSearch: () -> Unit
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -243,9 +288,8 @@ fun ModalDrawerScreen(
                     thickness = 1.dp
                 )
                 Spacer(modifier = modifier.height(10.dp))
-                val content = listOf("Main Page", "Profile Page", "Rental Page")
-                val resourceId =
-                    listOf(R.drawable.ic_folder, R.drawable.ic_profile, R.drawable.ic_handshake)
+                val content = listOf("메인 페이지", "내 프로필", "검색하기")
+                val resourceId = listOf(R.drawable.ic_folder, R.drawable.ic_profile, R.drawable.ic_search)
 
                 repeat(3) {
                     DrawerItem(
@@ -282,11 +326,14 @@ fun ModalDrawerScreen(
                     .background(Color.White)
                     .padding(horizontal = 25.dp)
             ) {
-                AppBar(openModalDrawer = {
-                    scope.launch {
-                        drawerState.open()
-                    }
-                })
+                AppBar(
+                    openModalDrawer = {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    },
+                    navigateToSearch = navigateToSearch
+                )
 
                 var filterSelectState by remember { mutableStateOf(0) }
                 LazyRow(
@@ -301,6 +348,7 @@ fun ModalDrawerScreen(
                             select = index == filterSelectState
                         ) {
                             filterSelectState = index
+                            mainFilter(if (item == "전체") "" else item)
                         }
                     }
                 }
@@ -308,7 +356,7 @@ fun ModalDrawerScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(equipments) {
+                    items(filterState.value) {
                         Row(
                             modifier = modifier
                                 .fillMaxWidth()

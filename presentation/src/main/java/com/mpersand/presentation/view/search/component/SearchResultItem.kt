@@ -17,17 +17,19 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
 import com.mpersand.presentation.R
 
 @Composable
-fun SearchResultItem() {
+fun SearchResultItem(data: EquipmentResponseModel) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             modifier = Modifier.size(width = 120.dp, height = 90.dp),
-            painter = painterResource(id = R.drawable.ic_temp_equipment_image),
+            painter = rememberAsyncImagePainter(model = data.image) ?: painterResource(id = R.drawable.ic_temp_equipment_image),
             contentDescription = "equipment image"
         )
 
@@ -36,7 +38,7 @@ fun SearchResultItem() {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "라즈베리파이 4 기자재 대여",
+                text = "${data.name}(${data.productNumber})",
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.fraunces_black)),
                     fontSize = 10.sp
@@ -44,7 +46,7 @@ fun SearchResultItem() {
             )
 
             Text(
-                text = "대여 기간 - 06.01 ~ 07.02",
+                text = data.description,
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.fraunces_black)),
                     fontSize = 7.sp,
