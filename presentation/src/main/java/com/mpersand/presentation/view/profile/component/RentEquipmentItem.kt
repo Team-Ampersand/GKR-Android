@@ -18,10 +18,12 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
 import com.mpersand.presentation.R
 
 @Composable
-fun RentEquipmentItem() {
+fun RentEquipmentItem(data: EquipmentResponseModel) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -31,13 +33,13 @@ fun RentEquipmentItem() {
                 modifier = Modifier
                     .padding(10.dp)
                     .size(width = 90.dp, height = 60.dp),
-                painter = painterResource(id = R.drawable.ic_temp_equipment_image),
+                painter = rememberAsyncImagePainter(model = data.image) ?: painterResource(id = R.drawable.ic_temp_equipment_image),
                 contentDescription = "equipment image"
             )
             
             Column {
                 Text(
-                    text = "Raspberry pie",
+                    text = data.name,
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.fraunces_black)),
                         fontSize = 10.sp,
@@ -46,7 +48,7 @@ fun RentEquipmentItem() {
                 )
 
                 Text(
-                    text = "대여 기간 - 06.01 ~ 07.02",
+                    text = data.productNumber,
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.fraunces_black)),
                         fontSize = 7.sp,
@@ -55,7 +57,7 @@ fun RentEquipmentItem() {
                 )
 
                 Text(
-                    text = "대여 장소 - 전문교육부",
+                    text = data.description,
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.fraunces_black)),
                         fontSize = 7.sp,
