@@ -27,12 +27,14 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -65,7 +67,7 @@ fun MainScreen(
     LaunchedEffect(Unit) {
         viewModel.getAllEquipments()
     }
-    
+
     val uiState by viewModel.getAllEquipmentsUiState.observeAsState()
 
     when (val state = uiState) {
@@ -79,11 +81,11 @@ fun MainScreen(
             ) {
                 ModalDrawerScreen(
                     equipments = state.data!!,
+                    mainViewModel = viewModel,
                     navigateToDetail = navigateToDetail,
                     navigateToProfile = navigateToProfile,
                     navigateToSearch = navigateToSearch
                 )
-                viewModel.getAllEquipments()
             }
         }
         UiState.Unauthorized -> TODO()
@@ -185,6 +187,7 @@ fun ListItems(
 fun ModalDrawerScreen(
     modifier: Modifier = Modifier,
     equipments: List<EquipmentResponseModel>,
+    mainViewModel: MainViewModel,
     navigateToDetail: (productNumber: String) -> Unit,
     navigateToProfile: () -> Unit,
     navigateToSearch: () -> Unit
@@ -273,6 +276,11 @@ fun ModalDrawerScreen(
                     navigateToSearch = navigateToSearch
                 )
 
+                val filterRes by mainViewModel.mainFilter.observeAsState()
+                val resultSnapshot = snapshotFlow { filterRes }
+                val snapshotScope = rememberCoroutineScope()
+                val filterState: MutableState<List<EquipmentResponseModel>> = remember { mutableStateOf(equipments) }
+
                 var filterSelectState by remember { mutableStateOf(0) }
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -286,6 +294,21 @@ fun ModalDrawerScreen(
                             select = index == filterSelectState
                         ) {
                             filterSelectState = index
+
+                            snapshotScope.launch {
+                                mainViewModel.mainFilter(if (item == "전체") "" else item)
+
+                                resultSnapshot.collect { data ->
+                                    when (data) {
+                                        UiState.Loading -> TODO()
+                                        is UiState.Success -> filterState.value = data.data!!
+                                        UiState.BadRequest -> TODO()
+                                        UiState.Unauthorized -> TODO()
+                                        UiState.NotFound -> filterState.value = emptyList()
+                                        else -> {}
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -293,7 +316,7 @@ fun ModalDrawerScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(equipments) {
+                    items(filterState.value) {
                         Row(
                             modifier = modifier
                                 .fillMaxWidth()
