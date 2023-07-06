@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
+import com.mpersand.domain.model.response.UserResponseModel
 import com.mpersand.presentation.R
 import com.mpersand.presentation.util.UiState
 import com.mpersand.presentation.view.main.component.GKRFilterItem
@@ -66,49 +67,62 @@ fun MainScreen(
 ) {
     LaunchedEffect(Unit) {
         viewModel.getAllEquipments()
+        viewModel.getUserInfo()
     }
 
-    val uiState by viewModel.getAllEquipmentsUiState.observeAsState()
+    val getAllEquipmentsUiState by viewModel.getAllEquipmentsUiState.observeAsState()
+    val getUserInfoUiState by viewModel.getUserInfoUiState.observeAsState()
     val filterRes by viewModel.mainFilter.observeAsState()
 
     val resultSnapshot = snapshotFlow { filterRes }
     val snapshotScope = rememberCoroutineScope()
 
-    when (val state = uiState) {
+    when (val allEquipmentsUiState = getAllEquipmentsUiState) {
+        is UiState.Success -> {
+            when(val userInfoUiState = getUserInfoUiState) {
+                is UiState.Success -> {
+                    Surface(
+                        modifier = modifier.fillMaxSize(),
+                        color = MaterialTheme.colors.background
+                    ) {
+                        val filterState: MutableState<List<EquipmentResponseModel>> = remember { mutableStateOf(allEquipmentsUiState.data!!) }
+
+                        ModalDrawerScreen(
+                            userInfo = userInfoUiState.data!!,
+                            filterState = filterState,
+                            mainFilter = {
+                                viewModel.mainFilter(it)
+
+                                snapshotScope.launch {
+                                    resultSnapshot.collect { data ->
+                                        when (data) {
+                                            UiState.Loading -> TODO()
+                                            is UiState.Success -> filterState.value = data.data!!
+                                            UiState.BadRequest -> TODO()
+                                            UiState.Unauthorized -> TODO()
+                                            UiState.NotFound -> filterState.value = emptyList()
+                                            else -> {}
+                                        }
+                                    }
+                                }
+                            },
+                            navigateToDetail = navigateToDetail,
+                            navigateToProfile = navigateToProfile,
+                            navigateToSearch = navigateToSearch
+                        )
+                    }
+                }
+                UiState.BadRequest -> TODO()
+                UiState.Loading -> TODO()
+                UiState.NotFound -> TODO()
+                UiState.Unauthorized -> TODO()
+                UiState.Unknown -> TODO()
+                else -> {}
+            }
+        }
         UiState.BadRequest -> TODO()
         UiState.Loading -> TODO()
         UiState.NotFound -> TODO()
-        is UiState.Success -> {
-            Surface(
-                modifier = modifier.fillMaxSize(),
-                color = MaterialTheme.colors.background
-            ) {
-                val filterState: MutableState<List<EquipmentResponseModel>> = remember { mutableStateOf(state.data!!) }
-
-                ModalDrawerScreen(
-                    filterState = filterState,
-                    mainFilter = {
-                        viewModel.mainFilter(it)
-
-                        snapshotScope.launch {
-                            resultSnapshot.collect { data ->
-                                when (data) {
-                                    UiState.Loading -> TODO()
-                                    is UiState.Success -> filterState.value = data.data!!
-                                    UiState.BadRequest -> TODO()
-                                    UiState.Unauthorized -> TODO()
-                                    UiState.NotFound -> filterState.value = emptyList()
-                                    else -> {}
-                                }
-                            }
-                        }
-                    },
-                    navigateToDetail = navigateToDetail,
-                    navigateToProfile = navigateToProfile,
-                    navigateToSearch = navigateToSearch
-                )
-            }
-        }
         UiState.Unauthorized -> TODO()
         UiState.Unknown -> TODO()
         else -> {}
@@ -207,6 +221,7 @@ fun ListItems(
 @Composable
 fun ModalDrawerScreen(
     modifier: Modifier = Modifier,
+    userInfo: UserResponseModel,
     filterState: MutableState<List<EquipmentResponseModel>>,
     mainFilter: (String) -> Unit,
     navigateToDetail: (productNumber: String) -> Unit,
@@ -226,19 +241,19 @@ fun ModalDrawerScreen(
             ) {
                 Image(
                     modifier = modifier.size(30.dp, 30.dp),
-                    painter = painterResource(id = R.drawable.ic_logo),
+                    painter = rememberAsyncImagePainter(userInfo.profileUrl),
                     contentDescription = "image",
                     contentScale = ContentScale.Crop
                 )
                 Text(
                     modifier = modifier.padding(top = 10.dp),
-                    text = "박성현",
+                    text = userInfo.name,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Thin,
                     fontFamily = FontFamily(Font(R.font.fraunces_black))
                 )
                 Text(
-                    text = "3학년 2반 8번",
+                    text = "${userInfo.grade}학년 ${userInfo.classNum}반 ${userInfo.number}번",
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Thin,
                     fontFamily = FontFamily(Font(R.font.fraunces_black))
@@ -271,8 +286,8 @@ fun ModalDrawerScreen(
                     ) {
                         selectedItem = it
 
-                        if (it == 1) navigateToProfile()
-                        else if (it == 2) navigateToSearch()
+                        if (selectedItem == 1) navigateToProfile()
+                        else if (selectedItem == 2) navigateToSearch()
 
                         scope.launch {
                             drawerState.close()
