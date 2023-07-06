@@ -48,11 +48,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
+import com.mpersand.domain.model.response.UserResponseModel
 import com.mpersand.presentation.R
 import com.mpersand.presentation.util.UiState
 import com.mpersand.presentation.view.main.component.GKRFilterItem
 import com.mpersand.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun MainScreen(
@@ -63,27 +65,38 @@ fun MainScreen(
 ) {
     LaunchedEffect(Unit) {
         viewModel.getAllEquipments()
+        viewModel.getUserInfo()
     }
-    
-    val uiState by viewModel.getAllEquipmentsUiState.observeAsState()
 
-    when (val state = uiState) {
+    val getAllEquipmentUiState by viewModel.getAllEquipmentsUiState.observeAsState()
+    val getUserInfoUiState by viewModel.getUserInfoUiState.observeAsState()
+
+    when (val equipmentUiStat = getAllEquipmentUiState) {
+        is UiState.Success -> {
+            when (val userInfoUiState = getUserInfoUiState) {
+                is UiState.Success -> {
+                    Surface(
+                        modifier = modifier.fillMaxSize(),
+                        color = MaterialTheme.colors.background
+                    ) {
+                        ModalDrawerScreen(
+                            equipments = equipmentUiStat.data!!,
+                            userInfo = userInfoUiState.data!!,
+                            navigateToDetail = navigateToDetail,
+                            navigateToProfile = navigateToProfile
+                        )
+                        viewModel.getAllEquipments()
+                    }
+                }
+                UiState.BadRequest -> TODO()
+                UiState.Unauthorized -> TODO()
+                UiState.NotFound -> TODO()
+                else -> {}
+            }
+        }
         UiState.BadRequest -> TODO()
         UiState.Loading -> TODO()
         UiState.NotFound -> TODO()
-        is UiState.Success -> {
-            Surface(
-                modifier = modifier.fillMaxSize(),
-                color = MaterialTheme.colors.background
-            ) {
-                ModalDrawerScreen(
-                    equipments = state.data!!,
-                    navigateToDetail = navigateToDetail,
-                    navigateToProfile = navigateToProfile
-                )
-                viewModel.getAllEquipments()
-            }
-        }
         UiState.Unauthorized -> TODO()
         UiState.Unknown -> TODO()
         else -> {}
@@ -155,10 +168,21 @@ fun ListItems(
         Text(
             modifier = modifier.padding(top = 2.dp),
             text = when (equipment.name) {
-                "맥북" -> { "#맥북  #노트북" }
-                "갤럭시 북" -> { "#갤럭시 북  #노트북" }
-                "터치모니터" -> { "#터치모니터  #모니터" }
-                else -> { "#?" }
+                "맥북" -> {
+                    "#맥북  #노트북"
+                }
+
+                "갤럭시 북" -> {
+                    "#갤럭시 북  #노트북"
+                }
+
+                "터치모니터" -> {
+                    "#터치모니터  #모니터"
+                }
+
+                else -> {
+                    "#?"
+                }
             },
             fontSize = 7.sp,
             fontWeight = FontWeight.Thin,
@@ -178,6 +202,7 @@ fun ListItems(
 fun ModalDrawerScreen(
     modifier: Modifier = Modifier,
     equipments: List<EquipmentResponseModel>,
+    userInfo: UserResponseModel,
     navigateToDetail: (productNumber: String) -> Unit,
     navigateToProfile: () -> Unit
 ) {
@@ -194,19 +219,19 @@ fun ModalDrawerScreen(
             ) {
                 Image(
                     modifier = modifier.size(30.dp, 30.dp),
-                    painter = painterResource(id = R.drawable.ic_logo), // rememberAsyncImagePainter(imageUri.value)
+                    painter = rememberAsyncImagePainter(userInfo.profileUrl),
                     contentDescription = "image",
                     contentScale = ContentScale.Crop
                 )
                 Text(
                     modifier = modifier.padding(top = 10.dp),
-                    text = "박성현",
+                    text = userInfo.name,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Thin,
                     fontFamily = FontFamily(Font(R.font.fraunces_black))
                 )
                 Text(
-                    text = "3학년 2반 8번",
+                    text = "${userInfo.grade}학년 ${userInfo.classNum}반 ${userInfo.number}번",
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Thin,
                     fontFamily = FontFamily(Font(R.font.fraunces_black))
