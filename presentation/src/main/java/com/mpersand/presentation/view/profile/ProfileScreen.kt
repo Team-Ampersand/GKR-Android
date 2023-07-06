@@ -218,7 +218,7 @@ fun ColumnScope.RentEquipmentView(profileViewModel: ProfileViewModel) {
                 UiState.Loading -> TODO()
                 is UiState.Success -> {
                     items(state.data!!) {
-                        RentEquipmentItem()
+                        RentEquipmentItem(data = it)
                     }
                 }
                 UiState.BadRequest -> TODO()
