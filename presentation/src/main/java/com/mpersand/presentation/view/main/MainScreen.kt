@@ -248,6 +248,7 @@ fun ModalDrawerScreen(
                         selectedItem = it
 
                         if (it == 1) navigateToProfile()
+                        else if (it == 2) navigateToSearch()
 
                         scope.launch {
                             drawerState.close()
