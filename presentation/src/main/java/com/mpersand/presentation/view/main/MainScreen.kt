@@ -27,12 +27,14 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -65,8 +67,12 @@ fun MainScreen(
     LaunchedEffect(Unit) {
         viewModel.getAllEquipments()
     }
-    
+
     val uiState by viewModel.getAllEquipmentsUiState.observeAsState()
+    val filterRes by viewModel.mainFilter.observeAsState()
+
+    val resultSnapshot = snapshotFlow { filterRes }
+    val snapshotScope = rememberCoroutineScope()
 
     when (val state = uiState) {
         UiState.BadRequest -> TODO()
@@ -77,13 +83,30 @@ fun MainScreen(
                 modifier = modifier.fillMaxSize(),
                 color = MaterialTheme.colors.background
             ) {
+                val filterState: MutableState<List<EquipmentResponseModel>> = remember { mutableStateOf(state.data!!) }
+
                 ModalDrawerScreen(
-                    equipments = state.data!!,
+                    filterState = filterState,
+                    mainFilter = {
+                        viewModel.mainFilter(it)
+
+                        snapshotScope.launch {
+                            resultSnapshot.collect { data ->
+                                when (data) {
+                                    UiState.Loading -> TODO()
+                                    is UiState.Success -> filterState.value = data.data!!
+                                    UiState.BadRequest -> TODO()
+                                    UiState.Unauthorized -> TODO()
+                                    UiState.NotFound -> filterState.value = emptyList()
+                                    else -> {}
+                                }
+                            }
+                        }
+                    },
                     navigateToDetail = navigateToDetail,
                     navigateToProfile = navigateToProfile,
                     navigateToSearch = navigateToSearch
                 )
-                viewModel.getAllEquipments()
             }
         }
         UiState.Unauthorized -> TODO()
@@ -184,7 +207,8 @@ fun ListItems(
 @Composable
 fun ModalDrawerScreen(
     modifier: Modifier = Modifier,
-    equipments: List<EquipmentResponseModel>,
+    filterState: MutableState<List<EquipmentResponseModel>>,
+    mainFilter: (String) -> Unit,
     navigateToDetail: (productNumber: String) -> Unit,
     navigateToProfile: () -> Unit,
     navigateToSearch: () -> Unit
@@ -202,7 +226,7 @@ fun ModalDrawerScreen(
             ) {
                 Image(
                     modifier = modifier.size(30.dp, 30.dp),
-                    painter = painterResource(id = R.drawable.ic_logo), // rememberAsyncImagePainter(imageUri.value)
+                    painter = painterResource(id = R.drawable.ic_logo),
                     contentDescription = "image",
                     contentScale = ContentScale.Crop
                 )
@@ -286,6 +310,7 @@ fun ModalDrawerScreen(
                             select = index == filterSelectState
                         ) {
                             filterSelectState = index
+                            mainFilter(if (item == "전체") "" else item)
                         }
                     }
                 }
@@ -293,7 +318,7 @@ fun ModalDrawerScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(equipments) {
+                    items(filterState.value) {
                         Row(
                             modifier = modifier
                                 .fillMaxWidth()
