@@ -69,6 +69,10 @@ fun MainScreen(
     }
 
     val uiState by viewModel.getAllEquipmentsUiState.observeAsState()
+    val filterRes by viewModel.mainFilter.observeAsState()
+
+    val resultSnapshot = snapshotFlow { filterRes }
+    val snapshotScope = rememberCoroutineScope()
 
     when (val state = uiState) {
         UiState.BadRequest -> TODO()
@@ -79,9 +83,26 @@ fun MainScreen(
                 modifier = modifier.fillMaxSize(),
                 color = MaterialTheme.colors.background
             ) {
+                val filterState: MutableState<List<EquipmentResponseModel>> = remember { mutableStateOf(state.data!!) }
+
                 ModalDrawerScreen(
-                    equipments = state.data!!,
-                    mainViewModel = viewModel,
+                    filterState = filterState,
+                    mainFilter = {
+                        viewModel.mainFilter(it)
+
+                        snapshotScope.launch {
+                            resultSnapshot.collect { data ->
+                                when (data) {
+                                    UiState.Loading -> TODO()
+                                    is UiState.Success -> filterState.value = data.data!!
+                                    UiState.BadRequest -> TODO()
+                                    UiState.Unauthorized -> TODO()
+                                    UiState.NotFound -> filterState.value = emptyList()
+                                    else -> {}
+                                }
+                            }
+                        }
+                    },
                     navigateToDetail = navigateToDetail,
                     navigateToProfile = navigateToProfile,
                     navigateToSearch = navigateToSearch
@@ -186,8 +207,8 @@ fun ListItems(
 @Composable
 fun ModalDrawerScreen(
     modifier: Modifier = Modifier,
-    equipments: List<EquipmentResponseModel>,
-    mainViewModel: MainViewModel,
+    filterState: MutableState<List<EquipmentResponseModel>>,
+    mainFilter: (String) -> Unit,
     navigateToDetail: (productNumber: String) -> Unit,
     navigateToProfile: () -> Unit,
     navigateToSearch: () -> Unit
@@ -205,7 +226,7 @@ fun ModalDrawerScreen(
             ) {
                 Image(
                     modifier = modifier.size(30.dp, 30.dp),
-                    painter = painterResource(id = R.drawable.ic_logo), // rememberAsyncImagePainter(imageUri.value)
+                    painter = painterResource(id = R.drawable.ic_logo),
                     contentDescription = "image",
                     contentScale = ContentScale.Crop
                 )
@@ -276,11 +297,6 @@ fun ModalDrawerScreen(
                     navigateToSearch = navigateToSearch
                 )
 
-                val filterRes by mainViewModel.mainFilter.observeAsState()
-                val resultSnapshot = snapshotFlow { filterRes }
-                val snapshotScope = rememberCoroutineScope()
-                val filterState: MutableState<List<EquipmentResponseModel>> = remember { mutableStateOf(equipments) }
-
                 var filterSelectState by remember { mutableStateOf(0) }
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -294,21 +310,7 @@ fun ModalDrawerScreen(
                             select = index == filterSelectState
                         ) {
                             filterSelectState = index
-
-                            snapshotScope.launch {
-                                mainViewModel.mainFilter(if (item == "전체") "" else item)
-
-                                resultSnapshot.collect { data ->
-                                    when (data) {
-                                        UiState.Loading -> TODO()
-                                        is UiState.Success -> filterState.value = data.data!!
-                                        UiState.BadRequest -> TODO()
-                                        UiState.Unauthorized -> TODO()
-                                        UiState.NotFound -> filterState.value = emptyList()
-                                        else -> {}
-                                    }
-                                }
-                            }
+                            mainFilter(if (item == "전체") "" else item)
                         }
                     }
                 }
