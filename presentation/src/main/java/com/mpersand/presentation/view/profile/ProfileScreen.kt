@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
+import com.mpersand.domain.model.response.UserResponseModel
 import com.mpersand.presentation.R
 import com.mpersand.presentation.util.UiState
 import com.mpersand.presentation.view.component.GKRToolbar
@@ -59,6 +61,12 @@ fun ProfileScreen(
     navigateToMain: () -> Unit,
     navigateToSignIn: () -> Unit
 ) {
+    profileViewModel.getUser()
+    val userResult by profileViewModel.getUser.observeAsState()
+
+    profileViewModel.getEquipmentRentalListByUser()
+    val equipmentRentalList by profileViewModel.getListByUser.observeAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,17 +76,39 @@ fun ProfileScreen(
             title = "GKR",
             navigateToMain = navigateToMain
         )
-        ProfileUserCard(
-            profileViewModel = profileViewModel,
-            navigateToSignIn = navigateToSignIn
-        )
-        RentEquipmentView(profileViewModel = profileViewModel)
+
+        when (val result = equipmentRentalList) {
+            UiState.Loading -> {}
+            is UiState.Success -> {
+                ProfileUserCard(
+                    userResult = userResult,
+                    rentCount = result.data?.size,
+                    profileViewModel = profileViewModel,
+                    navigateToSignIn = navigateToSignIn
+                )
+                RentEquipmentView(equipmentRentalList = result.data)
+            }
+            UiState.BadRequest -> {}
+            UiState.Unauthorized -> {}
+            UiState.NotFound -> {
+                ProfileUserCard(
+                    userResult = userResult,
+                    rentCount = 0,
+                    profileViewModel = profileViewModel,
+                    navigateToSignIn = navigateToSignIn
+                )
+                RentEquipmentView(equipmentRentalList = emptyList())
+            }
+            else -> {}
+        }
         UserBanHistoryView(violationViewModel = violationViewModel)
     }
 }
 
 @Composable
 fun ColumnScope.ProfileUserCard(
+    userResult: UiState<UserResponseModel?>?,
+    rentCount: Int?,
     profileViewModel: ProfileViewModel,
     navigateToSignIn: () -> Unit
 ) {
@@ -118,10 +148,7 @@ fun ColumnScope.ProfileUserCard(
             .background(Color.White),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        profileViewModel.getUser()
-        val userResult by profileViewModel.getUser.observeAsState()
-
-        when (val state = userResult) {
+        when (userResult) {
             UiState.Loading -> TODO()
             is UiState.Success -> {
                 Image(
@@ -129,13 +156,13 @@ fun ColumnScope.ProfileUserCard(
                         .padding(25.dp)
                         .size(60.dp)
                         .clip(CircleShape),
-                    painter = rememberAsyncImagePainter(model = state.data?.profileUrl) ?: painterResource(id = R.drawable.ic_user_image),
+                    painter = rememberAsyncImagePainter(model = userResult.data?.profileUrl) ?: painterResource(id = R.drawable.ic_user_image),
                     contentDescription = "profile"
                 )
 
                 Column {
                     Text(
-                        text = state.data?.name ?: "null",
+                        text = userResult.data?.name ?: "null",
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.fraunces_black)),
                             color = Color(0xFFC2C2C2),
@@ -144,7 +171,7 @@ fun ColumnScope.ProfileUserCard(
                     )
 
                     Text(
-                        text = "${state.data?.grade}학년 ${state.data?.classNum}반 ${state.data?.number}번",
+                        text = "${userResult.data?.grade}학년 ${userResult.data?.classNum}반 ${userResult.data?.number}번",
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.fraunces_black)),
                             color = Color(0xFFC2C2C2),
@@ -153,7 +180,7 @@ fun ColumnScope.ProfileUserCard(
                     )
 
                     Text(
-                        text = "대여한 물품 1개",
+                        text = "대여한 물품 ${rentCount}개",
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.fraunces_black)),
                             color = Color(0xFFC2C2C2),
@@ -185,7 +212,7 @@ fun ColumnScope.ProfileUserCard(
 }
 
 @Composable
-fun ColumnScope.RentEquipmentView(profileViewModel: ProfileViewModel) {
+fun ColumnScope.RentEquipmentView(equipmentRentalList: List<EquipmentResponseModel>?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -201,9 +228,6 @@ fun ColumnScope.RentEquipmentView(profileViewModel: ProfileViewModel) {
             )
         )
 
-        profileViewModel.getEquipmentRentalListByUser()
-        val equipmentRentalList by profileViewModel.getListByUser.observeAsState()
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -214,17 +238,8 @@ fun ColumnScope.RentEquipmentView(profileViewModel: ProfileViewModel) {
             contentPadding = PaddingValues(5.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            when (val state = equipmentRentalList) {
-                UiState.Loading -> TODO()
-                is UiState.Success -> {
-                    items(state.data!!) {
-                        RentEquipmentItem(data = it)
-                    }
-                }
-                UiState.BadRequest -> TODO()
-                UiState.Unauthorized -> TODO()
-                UiState.NotFound -> TODO()
-                else -> {}
+            items(equipmentRentalList!!) {
+                RentEquipmentItem(data = it)
             }
         }
     }
