@@ -38,7 +38,8 @@ fun GKRNavHost(
         detailScreen()
 
         searchScreen(
-            navigateToMain = { navController.navigateToMain() }
+            navigateToMain = { navController.navigateToMain() },
+            navigateToDetail = { navController.navigateToDetail(it) }
         )
     }
 }
