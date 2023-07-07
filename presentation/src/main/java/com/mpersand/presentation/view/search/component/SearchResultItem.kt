@@ -1,6 +1,7 @@
 package com.mpersand.presentation.view.search.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,9 +23,14 @@ import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
 import com.mpersand.presentation.R
 
 @Composable
-fun SearchResultItem(data: EquipmentResponseModel) {
+fun SearchResultItem(
+    data: EquipmentResponseModel,
+    navigateToDetail: (productNumber: String) -> Unit
+) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { navigateToDetail(data.productNumber) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
