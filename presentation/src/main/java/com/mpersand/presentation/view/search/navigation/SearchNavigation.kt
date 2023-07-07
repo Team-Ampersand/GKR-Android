@@ -11,8 +11,14 @@ fun NavController.navigateToSearch() {
     this.navigate(searchRoute)
 }
 
-fun NavGraphBuilder.searchScreen(navigateToMain: () -> Unit) {
+fun NavGraphBuilder.searchScreen(
+    navigateToMain: () -> Unit,
+    navigateToDetail: (productNumber: String) -> Unit
+) {
     composable(searchRoute) {
-        SearchScreen(navigateToMain = navigateToMain)
+        SearchScreen(
+            navigateToMain = navigateToMain,
+            navigateToDetail = navigateToDetail
+        )
     }
 }

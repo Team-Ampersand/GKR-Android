@@ -47,7 +47,8 @@ import com.mpersand.presentation.viewmodel.SearchViewModel
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel = hiltViewModel(),
-    navigateToMain: () -> Unit
+    navigateToMain: () -> Unit,
+    navigateToDetail: (productNumber: String) -> Unit
 ) {
     val textChange = remember { mutableStateOf(false) }
     val isTextChanged = remember { mutableStateOf(false) }
@@ -83,7 +84,8 @@ fun SearchScreen(
         if (!textChange.value && !isTextChanged.value && textState.value.isNotEmpty())
             SearchResultView(
                 text = textState.value,
-                searchViewModel = searchViewModel
+                searchViewModel = searchViewModel,
+                navigateToDetail = navigateToDetail
             )
     }
 }
@@ -170,7 +172,8 @@ fun SearchHistoryView(textState: MutableState<String>) {
 @Composable
 fun SearchResultView(
     text: String,
-    searchViewModel: SearchViewModel
+    searchViewModel: SearchViewModel,
+    navigateToDetail: (productNumber: String) -> Unit
 ) {
     searchViewModel.searchEquipment(text)
     val searchResult by searchViewModel.equipmentFilter.observeAsState()
@@ -194,7 +197,10 @@ fun SearchResultView(
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 items(state.data!!) {
-                    SearchResultItem(data = it)
+                    SearchResultItem(
+                        data = it,
+                        navigateToDetail = navigateToDetail
+                    )
                 }
             }
         }
