@@ -2,7 +2,6 @@ package com.mpersand.presentation.view.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,6 +55,7 @@ import com.mpersand.domain.model.response.UserResponseModel
 import com.mpersand.presentation.R
 import com.mpersand.presentation.util.UiState
 import com.mpersand.presentation.view.main.component.GKRFilterItem
+import com.mpersand.presentation.view.modifier.gkrClickable
 import com.mpersand.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
@@ -154,7 +154,7 @@ fun AppBar(
         )
         Spacer(modifier = modifier.weight(1f))
         Image(
-            modifier = modifier.clickable {
+            modifier = modifier.gkrClickable {
                 openModalDrawer()
             },
             painter = painterResource(id = R.drawable.ic_hamburger),
@@ -162,7 +162,7 @@ fun AppBar(
         )
         Spacer(modifier = modifier.width(16.dp))
         Image(
-            modifier = Modifier.clickable {
+            modifier = Modifier.gkrClickable {
                 navigateToSearch()
             },
             painter = painterResource(id = R.drawable.ic_search),
@@ -342,7 +342,7 @@ fun ModalDrawerScreen(
                         Row(
                             modifier = modifier
                                 .fillMaxWidth()
-                                .clickable {
+                                .gkrClickable {
                                     navigateToDetail(it.productNumber)
                                 }
                         ) {
@@ -373,7 +373,7 @@ fun DrawerItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClickItem() }
+            .gkrClickable { onClickItem() }
             .background(
                 color = if (selected) Color(0xFFFFE6C7) else Color.Transparent,
                 shape = RoundedCornerShape(10.dp)

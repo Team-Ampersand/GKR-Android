@@ -1,7 +1,6 @@
 package com.mpersand.presentation.view.search.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.mpersand.domain.model.equipment.response.EquipmentResponseModel
 import com.mpersand.presentation.R
+import com.mpersand.presentation.view.modifier.gkrClickable
 
 @Composable
 fun SearchResultItem(
@@ -30,7 +30,7 @@ fun SearchResultItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { navigateToDetail(data.productNumber) },
+            .gkrClickable { navigateToDetail(data.productNumber) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
