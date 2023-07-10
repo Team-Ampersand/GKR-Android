@@ -186,14 +186,14 @@ fun ListItems(
         Text(
             modifier = modifier.padding(top = 10.dp),
             text = equipment.name,
-            fontSize = 10.sp,
+            fontSize = 15.sp,
             fontWeight = FontWeight.Thin,
             fontFamily = FontFamily(Font(R.font.fraunces_black))
         )
         Text(
             modifier = modifier.padding(top = 2.dp),
             text = "대여 장소 - 전문교육부",
-            fontSize = 7.sp,
+            fontSize = 10.sp,
             fontWeight = FontWeight.Thin,
             fontFamily = FontFamily(Font(R.font.fraunces_black)),
             color = Color(0xFFC0C0C0)
@@ -206,7 +206,7 @@ fun ListItems(
                 "터치모니터" -> { "#터치모니터  #모니터" }
                 else -> { "#?" }
             },
-            fontSize = 7.sp,
+            fontSize = 10.sp,
             fontWeight = FontWeight.Thin,
             fontFamily = FontFamily(Font(R.font.fraunces_black)),
             color = Color(0xFFC0C0C0),
