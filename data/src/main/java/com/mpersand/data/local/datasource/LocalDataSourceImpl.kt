@@ -16,7 +16,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 class LocalDataSourceImpl @Inject constructor(
     @ApplicationContext private val context: Context
-): LocalDataSource {
+) : LocalDataSource {
     companion object {
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
@@ -44,4 +44,8 @@ class LocalDataSourceImpl @Inject constructor(
     override suspend fun getRefreshTokenExp(): Flow<String> = context.dataStore.data.map { it[REFRESH_TOKEN_EXP] ?: "" }
 
     override suspend fun isLogin(): Flow<Boolean> = context.dataStore.data.map { it[IS_LOGIN] ?: false }
+
+    override suspend fun logout() {
+        context.dataStore.edit { it[IS_LOGIN] = false }
+    }
 }

@@ -51,8 +51,8 @@ fun SignInScreen(
     val signInUiState by viewModel.signInUiState.observeAsState()
     val loginUiState by viewModel.loginUiState.observeAsState()
 
-    when (loginUiState) {
-        is UiState.Success -> navigateToMain()
+    when (val loginState = loginUiState) {
+        is UiState.Success -> loginState.data?.let { isLogin -> if (isLogin) navigateToMain() }
         else -> {}
     }
 
