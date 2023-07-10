@@ -42,7 +42,6 @@ import com.mpersand.presentation.viewmodel.DetailViewModel
 fun DetailDialog(
     viewModel: DetailViewModel = hiltViewModel(),
     onDismissRequest: () -> Unit,
-    showSnackBar: () -> Unit
 ) {
     var text by remember { mutableStateOf("") }
     val detailUiState by viewModel.getEquipmentInfoUiState.observeAsState()
@@ -70,7 +69,6 @@ fun DetailDialog(
                                 )
                             )
                             onDismissRequest()
-                            showSnackBar()
                         }
                     )
                 }

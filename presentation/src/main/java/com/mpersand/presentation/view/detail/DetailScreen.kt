@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +34,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.mpersand.presentation.R
 import com.mpersand.presentation.util.UiState
 import com.mpersand.presentation.viewmodel.DetailViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun DetailScreen(
@@ -46,7 +44,6 @@ fun DetailScreen(
     var showDialog by remember { mutableStateOf(false) }
     val getEquipmentInfoUiState by viewModel.getEquipmentInfoUiState.observeAsState()
     val postRentalRequestUiState by viewModel.postRentalRequestUiState.observeAsState()
-    val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(Unit) {
@@ -55,17 +52,14 @@ fun DetailScreen(
 
     Scaffold(scaffoldState = scaffoldState) { paddingValues ->
         if (showDialog) {
-            DetailDialog(onDismissRequest = { showDialog = false }) {
-                when(postRentalRequestUiState) {
-                    is UiState.Success -> {
-                        coroutineScope.launch {
-                            scaffoldState.snackbarHostState.showSnackbar("대여 요청이 완료되었습니다.")
-                        }
-                    }
-                    else -> { coroutineScope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar("예상 못 한 오류가 발생 했습니다.\n 개발자에게 문의 해주세요.")
-                    } }
-                }
+            DetailDialog(onDismissRequest = { showDialog = false })
+        }
+
+        LaunchedEffect(postRentalRequestUiState) {
+            when (postRentalRequestUiState) {
+                is UiState.Success -> scaffoldState.snackbarHostState.showSnackbar("대여 요청이 완료되었습니다.")
+                UiState.Loading -> {}
+                else -> scaffoldState.snackbarHostState.showSnackbar("예상 못 한 오류가 발생 했습니다.\n개발자에게 문의 해주세요.")
             }
         }
 
@@ -87,7 +81,7 @@ fun DetailScreen(
                     Column(modifier = modifier.padding(horizontal = 26.dp)) {
                         Text(
                             modifier = modifier.padding(top = 15.dp),
-                            text = state.data!!.name,
+                            text = state.data.name,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Thin,
                             fontFamily = FontFamily(Font(R.font.fraunces_black)),
@@ -95,7 +89,7 @@ fun DetailScreen(
                         )
                         Text(
                             modifier = modifier.padding(top = 3.dp),
-                            text = when (state.data!!.name) {
+                            text = when (state.data.name) {
                                 "맥북" -> {
                                     "#맥북  #노트북"
                                 }
@@ -119,7 +113,7 @@ fun DetailScreen(
                         )
                         Text(
                             modifier = modifier.padding(top = 30.dp),
-                            text = state.data!!.description,
+                            text = state.data.description,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Thin,
                             fontFamily = FontFamily(Font(R.font.fraunces_black)),
