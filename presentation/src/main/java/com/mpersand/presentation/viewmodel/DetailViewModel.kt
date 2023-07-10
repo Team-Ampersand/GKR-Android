@@ -1,6 +1,5 @@
 package com.mpersand.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,7 +22,7 @@ class DetailViewModel @Inject constructor(
     private val _getEquipmentInfoUiState = MutableLiveData<UiState<EquipmentResponseModel>>()
     val getEquipmentInfoUiState: LiveData<UiState<EquipmentResponseModel>> = _getEquipmentInfoUiState
 
-    private val _postRentalRequestUiState = MutableLiveData<UiState<Nothing>>()
+    private val _postRentalRequestUiState = MutableLiveData<UiState<Nothing>>(UiState.Loading)
     val postRentalRequestUiState: LiveData<UiState<Nothing>> = _postRentalRequestUiState
 
     fun getEquipmentInfo(productNumber: String) {
