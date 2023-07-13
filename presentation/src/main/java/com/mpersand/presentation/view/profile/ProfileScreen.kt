@@ -149,14 +149,15 @@ fun ColumnScope.ProfileUserCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         when (userResult) {
-            UiState.Loading -> TODO()
+            UiState.Loading -> {}
             is UiState.Success -> {
                 Image(
                     modifier = Modifier
                         .padding(25.dp)
                         .size(60.dp)
                         .clip(CircleShape),
-                    painter = rememberAsyncImagePainter(model = userResult.data?.profileUrl) ?: painterResource(id = R.drawable.ic_user_image),
+                    painter = if (userResult.data?.profileUrl != null) rememberAsyncImagePainter(model = userResult.data.profileUrl)
+                    else painterResource(id = R.drawable.ic_user_image),
                     contentDescription = "profile"
                 )
 
@@ -203,9 +204,9 @@ fun ColumnScope.ProfileUserCard(
                     )
                 }
             }
-            UiState.BadRequest -> TODO()
-            UiState.Unauthorized -> TODO()
-            UiState.NotFound -> TODO()
+            UiState.BadRequest -> {}
+            UiState.Unauthorized -> {}
+            UiState.NotFound -> {}
             else -> {}
         }
     }
