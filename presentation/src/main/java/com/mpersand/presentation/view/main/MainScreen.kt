@@ -245,7 +245,8 @@ fun ModalDrawerScreen(
                     modifier = modifier
                         .size(30.dp, 30.dp)
                         .clip(CircleShape),
-                    painter = rememberAsyncImagePainter(userInfo.profileUrl),
+                    painter = if (userInfo.profileUrl != null) rememberAsyncImagePainter(userInfo.profileUrl)
+                    else painterResource(id = R.drawable.ic_user_image),
                     contentDescription = "image",
                     contentScale = ContentScale.Crop
                 )
